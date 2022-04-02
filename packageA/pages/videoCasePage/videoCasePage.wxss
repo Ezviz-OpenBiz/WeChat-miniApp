@@ -1,0 +1,74 @@
+/* pages/videoCasePage/videoCasePage.wxss */
+
+.video-case-page .fill-image {
+  width: 100%;
+  height: 210px;
+}
+
+.video-case-page .empty-box {
+  height: 15px;
+}
+
+.video-case-page .describe-container {
+  margin: 20px 15px 0 15px;
+}
+
+.describe-text {
+  color: #999;
+  font-size: 16px;
+  margin-top: 12px;
+  line-height: 20px;
+}
+
+.video-case-page .input-container {
+  margin: 20px 0 0 15px;
+}
+
+.video-case-page .input-container .lab-title {
+  height: 22px;
+  font-size: 16px;
+  color: #2c2c2c;
+  font-weight: 400;
+}
+
+.video-case-page .input-container .lab-tip {
+  height: 21px;
+  font-size: 14px;
+  color: #999;
+  letter-spacing: 0;
+  font-weight: 400;
+  margin-top: 10px
+}
+
+.video-case-page .input-container .custom-input {
+  margin-top: 10px;
+  background: #F5F5F5;
+  border-radius: 8px;
+  height: 41px;
+  margin-right: 15px;
+  padding-left: 15px;
+}
+
+.video-case-page .input-container .custom-input-placeholder {
+  font-size: 14px;
+  color: #B3B3B3;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.video-case-page .btn-container .small-btn {
+  width: 167px;
+  height: 48px;
+  line-height: 48px;
+  background: #1477FF;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.video-case-page .resultContainer .beforeFooter {
+  height: 50px;
+}

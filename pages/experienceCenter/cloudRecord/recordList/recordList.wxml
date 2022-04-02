@@ -1,0 +1,86 @@
+<view class="colud-record-container">
+  <view class="head-bg-container">
+    <image class="head-bg" src="https://resource.eziot.com/group2/M00/00/60/CtwQFmDa2_OATwf4AAAsbqi97jw338.png" />
+  </view>
+  <view class="deviceInfo">
+    <text class="title">设备名称</text>
+    <text class="content">C3W({{deviceSerial}})</text>
+  </view>
+  <view class="deviceInfo">
+    <text class="title">序列号</text>
+    <text class="content">{{deviceSerial}}</text>
+  </view>
+
+  <view class="action-btn-group">
+    <navigator class="action-btn" url="/pages/experienceCenter/cloudRecord/recordVideo/recordVideo">
+    <view >录制音视频</view>
+  </navigator>
+  <navigator class="action-btn" url="/pages/experienceCenter/cloudRecord/catchPicture/catchpicture">
+    <view >抓拍图片</view>
+  </navigator>
+  </view>
+  <!-- 分割线 -->
+  <view class="divider"></view>
+  <!-- 测试文件夹 -->
+  <view class="recordList-container">
+    <view class="title-container" bindtap="{{listShow == true ? '_hiddenList' : '_showList'}}">
+      <view class="content-container">
+        <image class="icon" src="./images/icon-wenjianjia@2x.png"></image>
+        <view class="content">
+          <view class="contennt-title">测试文件夹</view>
+          <view class="content-tips">默认提供测试文件夹方便体验</view>
+        </view>
+      </view>
+      <!-- 操作按钮 -->
+      <view class=".action-btn" wx:if="{{listShow === true}}" bindtap="_hiddenList">
+        <image class="action-icon" src="./images/up.png"></image>
+      </view>
+      <view class=".action-btn" wx:if="{{listShow === false}}"  bindtap="_showList" >
+        <image class="action-icon" src="./images/down.png"></image>
+      </view>
+    </view> 
+
+    <!-- <image src="http://open-mediarecoder.oss-cn-hangzhou.aliyuncs.com/CAPTURE_FILES/c1cbc1d4e86d49a0981f54beea95280a/weixin_minapp/E47624228-1/dsda.jpg?Expires=1624856651&OSSAccessKeyId=LTAI4G6HFM3XPqa8rBjxHJRE&Signature=jVWddkhDhplAPvPheGL8D4Pvaiw%3D" /> -->
+
+    <!-- <audio src="http://open-mediarecoder.oss-cn-hangzhou.aliyuncs.com/REC_FILES/c1cbc1d4e86d49a0981f54beea95280a/weixin_minapp/E47624228-1/test_sads_20210623T120000Z_20210623T130000Z.mp4?Expires=1624853509&OSSAccessKeyId=LTAI4G6HFM3XPqa8rBjxHJRE&Signature=HfqSWKcZtkSz37Xd9AegU904Qmk%3D"></audio>
+
+    <video src="http://open-mediarecoder.oss-cn-hangzhou.aliyuncs.com/REC_FILES/c1cbc1d4e86d49a0981f54beea95280a/weixin_minapp/E47624228-1/test_sads_20210623T120000Z_20210623T130000Z.mp4?Expires=1624853509&OSSAccessKeyId=LTAI4G6HFM3XPqa8rBjxHJRE&Signature=HfqSWKcZtkSz37Xd9AegU904Qmk%3D"></video> -->
+
+    <!-- 文件列表 -->
+    <view class="list-container" wx:if="{{listShow === true && list.length > 0}}">
+      <view class="list-item" wx:for="{{list}}" wx:key="index" >
+        <view class="name-container">
+          <image class="icon" src="./images/photo.png" wx:if="{{item.fileType !== 1}}"></image>
+          <image class="icon" src="./images/commonrecord.png" wx:if="{{item.fileType === 1}}"></image>
+          <text class="name">{{item.fileId}}</text>
+        </view>
+        <view class="action-container" bindtap="_operateModalShow" data-fileId="{{item.fileId}}" data-fileType="{{item.fileType}}" >
+          <text wx:if="{{item.status == 0}}">正常</text>
+          <text wx:if="{{item.status == 1}}">上传中</text>
+          <text class="error-status" wx:if="{{(item.status != 0) && (item.status != 1)}}">文件上传错误{{item.errorCode}}</text>
+          <image class="action-btn" src="./images/right.png" ></image>
+        </view>
+      </view>
+    </view>
+    <!-- 文件列表为空 -->
+    <view class="list-container" wx:if="{{listShow === true && list.length == 0}}">
+      <view class="no-list-container">
+        <image class="no-list-content" src='./images/NoList.png' />
+        <view class="empty-text">暂无录制文件</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 下载删除 -->
+
+<view class="operate-modal-mask" wx:if="{{operateModalShow == true}}">
+  <view class="operate-modal-mask-warp">
+    <view class="operate-conatiner">
+      <view class="action-btn download-btn" bindtap="_fileDownload">下载</view>
+      <view class="action-btn" bindtap="_fileDelete">删除</view>
+    </view>
+    <view class="operate-cancel" bindtap="_operateModalHidden">取消</view>
+  </view>
+</view>
+

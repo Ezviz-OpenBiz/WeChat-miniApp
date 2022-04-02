@@ -1,0 +1,71 @@
+<!-- serverAdvantage -->
+  <view class="experience-server-advantage">
+    <view class="title">服务优势</view>
+    <view class="content">
+      <view class="content-item" wx:for="{{advantageList}}" wx:key="index" >
+        <view class="icon">
+          <image class="icon-image" src="{{item.url}}"></image>
+        </view>
+        <view class="des">
+          <view class="title">{{item.title}}</view>
+          <view class="tip">{{item.tip}}</view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{showMore == false}}">
+      <view class="action-btn" bindtap="__showMore">
+        <text>展开更多</text>
+        <image class="btn-icon" src="/pages/component/serverAdvantage/images/down.png"></image>
+      </view>
+    </view>
+    <view wx:if="{{showMore == true}}">
+      <view class="price-content">
+        <text class="title">服务价格</text>
+        <!-- 表格形式 -->
+        <block wx:if="{{priceContent.type == 'table'}}">
+          <view class="table">
+            <view wx:for="{{priceContent.data}}" wx:key="index"  >
+              <view class="table-row bg thead" wx:if="{{index == 0 }}">
+                <view class="leftcontent">{{item.title}}</view>
+                <view class="rightcontent">{{item.content}}</view>
+              </view>
+              <view class="table-row bg" wx:if="{{index % 2 == 0 && index != 0}}">
+                <view class="leftcontent">{{item.title}}</view>
+                <view class="rightcontent">{{item.content}}</view>
+              </view>
+              <view class="table-row" wx:if="{{index % 2 == 1 }}">
+                <view class="leftcontent">{{item.title}}</view>
+                <view class="rightcontent">{{item.content}}</view>
+              </view>
+            </view>
+            <view class="tbottom bg" wx:if="{{priceContent != null && (priceContent.data.length % 2 == 0)}}">
+              {{priceContent.tips}}
+            </view>
+            <view class="tbottom" wx:if="{{priceContent != null && (priceContent.data.length % 2 == 1)}}">
+              {{priceContent.tips}}
+            </view>
+          </view>
+        </block>
+        <!-- list形式 -->
+        <block wx:if="{{priceContent.type == 'list'}}">
+          <view class="list">
+            <view wx:for="{{priceContent.data}}" wx:key="index"  >
+              <view class="list-row">
+                <view class="list-row-title">{{item.title}}</view>
+                <view class="list-row-content" wx:for="{{item.content}}" wx:key="_index">{{item}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <block wx:if="{{priceContent.type == 'free'}}">
+          <text class="free">免费</text>
+        </block>
+
+      </view>
+      <view class="action-btn" bindtap="__showMore">
+        <text>收起</text>
+        <image class="btn-icon" src="/pages/component/serverAdvantage/images/up.png"></image>
+      </view>
+    </view>
+  </view>

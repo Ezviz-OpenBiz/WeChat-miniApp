@@ -1,0 +1,60 @@
+@import "../../../component/serverInstruction/index.wxss";
+@import "../../../component/serverAdvantage/index.wxss";
+
+.divider {
+  width: 100%;
+  height: 5px;
+  background: #F8F8F8;
+}
+
+.contactUs {
+  position: fixed;
+  right: 4px;
+  bottom: 280px;
+  width: 75px;
+  height: 85px;
+  cursor: pointer;
+}
+
+.hidden-contactUs {
+  transition: right 0.4s ease-in;
+  right: -30px;
+}
+
+.instruction-viedo {
+  padding: 26px 15px;
+  width: 345px;
+  height: 194px;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.linkTo {
+  width: 235px;
+  height: 178px;
+  margin: 30px auto 0px;
+  font-size: 14px;
+  color: #648FFC;
+  letter-spacing: 0.17px;
+  text-align: center;
+  font-weight: 400;
+}
+
+.experience-btn-container {
+  position: fixed;
+  left: 15px;
+  right: 15px;
+  bottom: 28px;
+}
+.experience-btn-container .experience-btn {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  background: #648FFC;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+}

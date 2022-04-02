@@ -1,0 +1,40 @@
+<!-- serverAdvantage -->
+<view class="experience-apply-form">
+  <view class="form-item">
+  <text class="form-title">姓名</text>
+  <input class="input-area" maxlength="20" placeholder="请输入姓名" bindinput="_nameInput" bindblur="_nameBlur" value="{{name}}" />
+  <image wx:if="{{nameclearIconShow}}" data-type="name"  class="clearIcon" src="../../experienceCenter/deviceTrust/device/images/deleteoutlined.png" bindtap="_clearItem" />
+  </view>
+
+  <view class="form-item">
+  <text class="form-title">公司名称<text class="notice">*</text></text>
+  <input class="input-area" maxlength="20" placeholder="请输入公司名称" bindinput="_enterpriseInput" bindblur="_enterpriseBlur"  value="{{enterprise}}" />
+  <image wx:if="{{enterpriseclearIconShow}}" data-type="enterprise"  class="clearIcon" src="../../experienceCenter/deviceTrust/device/images/deleteoutlined.png" bindtap="_clearItem" />
+  </view>
+
+  <view class="form-item">
+  <text class="form-title">邮箱</text>
+  <input class="input-area" maxlength="30" placeholder="请输入邮箱" bindinput="_emailInput"  
+  bindblur="_emailBlur" value="{{email}}" />
+  <image wx:if="{{emailclearIconShow}}" data-type="email"  class="clearIcon" src="../../experienceCenter/deviceTrust/device/images/deleteoutlined.png" bindtap="_clearItem" />
+  </view>
+
+  <view class="form-item">
+  <text class="form-title">电话<text class="notice">*</text></text>
+  <input class="input-area" maxlength="20" placeholder="请输入电话" bindinput="_contactWayInput" 
+  bindblur="_contactWayBlur" value="{{contactWay}}" />
+  <image wx:if="{{contactWayclearIconShow}}" data-type="contactWay"  class="clearIcon" src="../../experienceCenter/deviceTrust/device/images/deleteoutlined.png" bindtap="_clearItem" />
+  </view>
+
+  <view class="form-item">
+  <text class="form-title">您的产品需求及简介<text class="notice">*</text></text>
+  <input class="input-area" maxlength="255" placeholder="请输入产品需求及简介" bindblur="_questionDescriptionBlur"  bindinput="_questionDescriptionInput" value="{{questionDescription}}" />
+  <image wx:if="{{questionDescriptionclearIconShow}}" data-type="questionDescription" class="clearIcon" src="../../experienceCenter/deviceTrust/device/images/deleteoutlined.png" bindtap="_clearItem" />
+  </view>
+
+  <view class="experience-apply-btn-container">
+    <button class="experience-apply-btn" bindtap="_sbumitApplyForm" wx:if="{{enterprise && contactWay && questionDescription}}">确认</button>
+    <button class="disable-experience-apply-btn" wx:if="{{!enterprise || !contactWay || !questionDescription}}">确认</button>
+  </view>
+</view>
+  

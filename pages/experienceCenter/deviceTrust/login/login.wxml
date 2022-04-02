@@ -1,0 +1,48 @@
+
+<view class="device-trust-login-container">
+  <navigation-bar title="设备托管" bindback="_backToLastPage"></navigation-bar>
+  <view class="title">当前身份</view>
+
+  <view class="userType-container">
+    <view class="{{userType == 'B' ? 'userType userType-active' : 'userType'}}" bindtap="_changeUserTypeToB">
+      <view class="title">B-开发者</view>
+      <view class="dec">可查看设备</view>
+    </view>
+    <view class="{{userType == 'C' ? 'userType userType-active' : 'userType'}}" bindtap="_changeUserTypeToC">
+      <view class="title">C-设备拥有者</view>
+      <view class="dec">登录-授权&取消授权设备</view>
+    </view>
+  </view>
+
+  <view class="companyIcon-container" wx:if="{{userType == 'C'}}">
+    <view class="iconItem">
+      <image class="iconItem-image" src="./images/ezviz-icon-trans.png"></image>
+      </view>
+
+    <image class="linkItem" src="./images/transfer.png"></image>
+    <view class="iconItem">
+    <image class="iconItem-image" src="{{applicationIcon ? applicationIcon : './images/ezviz-icon-trans.png'}}"></image>
+    </view>
+  </view>
+
+  <view class="form-container" wx:if="{{userType == 'C'}}">
+    <input type="text" class="inputFormItem" value="wsqa3" disabled />
+    <input type="password" class="inputFormItem" value="abcd1234" disabled />
+    <navigator url="/pages/experienceCenter/deviceTrust/device/device?userType={{userType}}">
+      <view class="form-btn"  >登录</view>
+    </navigator> 
+  </view>
+
+  <!-- B角色 -->
+  <view wx:if="{{userType == 'B'}}">
+    <view class="no-device-container">
+      <image class="no-device-content" src='../device/images/NoDevice@2x.png' />
+      <view class="empty-text">您还未获得授权设备</view>
+      <view class="linkTo" bindtap="_goToOpenweb" >前往官网了解详细信息</view>
+    </view>
+  </view>
+
+  <!-- 返回弹窗 -->
+  <!-- <Modal show="{{modalVisible}}" type="confirm" contentText="{{modalText}}" bind:handOk="_handdleOk" bind:handCancel="_handCancel" /> -->
+
+</view>

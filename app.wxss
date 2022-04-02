@@ -1,0 +1,159 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.page-body {
+  width: 100%;
+  flex-grow: 1;
+  overflow-x: hidden;
+}
+
+/* 默认按钮样式重置 */
+button{
+  color: #fff;
+  background: #458fff;
+  font-size: 19px;
+}
+button.button-hover{
+  color: #fff;
+  background: #2f82ff;
+}
+
+.mainBtn{
+  font-size: 19px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-radius: 0;
+}
+.beforeFooter{
+  height: 100px;
+}
+
+/* 结果内容样式 */
+.result-title{
+  font-weight: bold;
+  height: 16px;
+  line-height: 16px;
+  font-size: 16px;
+  color: #000;
+  margin: 20px 0 0 15px;
+  border-left: 4px solid #458fff;
+  text-indent: 8px;
+}
+
+
+.resultContainer{
+  margin-top: 4px;
+}
+.resultBox{
+  margin: 16px 0 0 26px;
+}
+.resultItem{
+  color: #666;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.segmentLine{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.segmentLineA{
+  width: 15px;
+  height: 1px;
+}
+.segmentLineB{
+  width: 100%;
+  height: 1px;
+  background: #f5f5f5;
+}
+
+/*radio未选中时样式 */
+radio .wx-radio-input{ 
+  height: 32rpx; 
+  line-height: 32rpx;
+  width: 32rpx;
+  border-radius: 50%;
+  border: 1px solid #D9D9D9;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+  
+  
+ /* 选中后的 背景样式  */
+ radio .wx-radio-input.wx-radio-input-checked {
+   /* border: none; */
+   border-color: #4C80F7!important;
+   background-color: #fff!important; 
+   background-color: transparent!important;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+  
+    
+ }
+  
+ /* 选中后的 对勾样式  */
+ radio .wx-radio-input.wx-radio-input-checked::before {
+  /* 去除对号 */
+  content: ''; 
+  background: #fff;
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background-color: #4C80F7;
+  /* 居中 */
+  position: absolute;
+  left: 16rpx;
+  top: 16rpx; 
+   
+ }
+
+/*checkbox未选中时样式 */
+checkbox .wx-checkbox-input{ 
+  /* 自定义样式.... */
+  height: 40rpx; 
+  line-height: 40rpx;
+  width: 40rpx;
+  border-radius: 50%;
+  border: 1px solid #D9D9D9;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+  
+  
+ /* 选中后的 背景样式 */
+ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+  border-radius: 50%;
+  border-color: #4C80F7!important;
+  
+    
+ }
+  
+ /* 选中后的 对勾样式 */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+  /* 去除对号 */
+  content: ''; 
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background-color: #4C80F7;
+  /* 居中 */
+  position: absolute;
+  left: 20rpx;
+  top: 20rpx; 
+   
+}

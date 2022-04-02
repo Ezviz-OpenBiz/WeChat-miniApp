@@ -1,0 +1,176 @@
+<view class="device-trust-container">
+  <view class="title">当前身份</view>
+  <view class="userType-container">
+    <view class="{{currentUserType == 'B' ? 'userType userType-active' : 'userType'}}" bindtap="_changeUserTypeToB">
+      <view class="title">B-开发者</view>
+      <view class="dec">可查看设备</view>
+    </view>
+    <view class="{{currentUserType == 'C' ? 'userType userType-active' : 'userType'}}" bindtap="_changeUserTypeToC">
+      <view class="title">C-设备拥有者</view>
+      <view class="dec">登录-授权&取消授权设备</view>
+    </view>
+  </view>
+
+  <!-- 分割线 -->
+  <view class="divider"></view>
+
+  <!-- 设备列表 C-设备拥有者 -->
+  <view class="device-trust-content" wx:if="{{currentUserType === 'C'}}">
+    <!-- 授权设备类型 -->
+    <view class="authorizeTypeContainer">
+      <view class="{{authorizeType == 'unauthorize' ? 'authorizeType authorizeTypeAct' : 'authorizeType'}}"
+        bindtap="_changeToUnauthorize"
+      >
+        未授权设备
+      </view>
+      <view class="{{authorizeType == 'authorize' ? 'authorizeType authorizeTypeAct' : 'authorizeType'}}"
+        bindtap="_changeToAuthorize"
+      >
+        已授权设备
+      </view>
+    </view>
+    <!-- 设备列表不为空 -->
+    <view wx:if="{{(authorizeType == 'unauthorize' && deviceList.length > 0) || (authorizeType == 'authorize' && authorizeDeviceList.length > 0 )}}">
+      <!-- 搜索 -->
+      <view class="searchBar">
+        <view class="searchItem">
+          <input class="searchInput" placeholder="请输入完整的设备序列号" type="text" value="{{searchItem}}" 
+          bindinput="_searchItemInput"
+          />
+
+          <image class="searchIcon" src="./images/search.png" />
+          <image wx:if="{{!!searchItem}}" class="clearIcon" src="./images/deleteoutlined.png" bindtap="_clearSearchItem" />
+        </view>
+        <text class="search-btn" bindtap="_searchDevice" >搜索</text>
+      </view>
+
+      <!-- 设备列表 -->
+      <view class="list-container" >
+        <view class="list-item" wx:for="{{authorizeType === 'unauthorize' ? deviceList : authorizeDeviceList}}" wx:key="id">
+          <checkbox value="cb" checked="{{(item.trustType != 1 && checkAll) || (authorizeType === 'authorize' && checkAll)}}" bindtap="_allItemChecked" disabled="{{item.trustType === 1 && authorizeType === 'unauthorize'}}" />
+          <view class="item-pic">
+            <image class="pic-image" src="{{item.picUrl}}" />
+            <view class="trust-icon" wx:if="{{item.trustType === 1 && authorizeType === 'unauthorize'}}">
+              已授权
+            </view>
+          </view>
+          <view class="item-container">
+            <view class="title">{{item.name}}</view>
+            <view class="detail">
+              <span class="tag">{{item.category}}</span>
+              <span class="dec">{{item.deviceSerial}}</span>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 授权按钮 -->
+      <view class="device-trust-action">
+        <label class="checkbox">
+        <checkbox value="cb" checked="true" bindtap="_allItemChecked" checked="{{checkAll}}" />全选</label>
+        <view class="trust-btn" wx:if="{{checkAll && authorizeType == 'authorize'}}" bindtap="_cancelTrust">
+          解除授权
+        </view>
+        <view class="trust-btn" wx:if="{{checkAll && authorizeType == 'unauthorize'}}" bindtap="_trustDevice">
+          授权
+        </view>
+        <navigator url="/pages/experienceCenter/deviceTrust/login/login">
+          <view class="trust-btn" wx:if="{{!checkAll}}">完成</view>
+        </navigator>
+      </view>
+    </view>
+    <!-- 设备为空 -->
+    <view wx:if="{{(authorizeType == 'unauthorize' && deviceList.length == 0) || (authorizeType == 'authorize' && authorizeDeviceList.length == 0 )}}">
+      <view class="no-device-container">
+        <image class="no-device-content" src='./images/NoDevice@2x.png' />
+        <view class="empty-text">暂无设备</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 设备列表 B-开发者 -->
+  <view class="device-trust-content" wx:if="{{currentUserType === 'B'}}">
+    <!-- 已授权列表不为空 -->
+    <view wx:if="{{authorizeDeviceList.length > 0 }}">
+      <view class="authorizeTypeContainer">
+        <view class="authorizeType deviceTitle">托管设备列表</view>
+      </view>
+      <!-- 设备列表 -->
+      <view class="list-container" >
+        <view class="list-item" wx:for="{{authorizeDeviceList}}" wx:key="id">
+          <view class="item-pic item-device-pic" bindtap="_playVideoModalShow">
+            <image class="pic-image" src="{{item.picUrl}}" />
+            <view class="play-icon-bg" >
+              <image class="play-icon" src="./images/playfill2.png" />
+            </view>
+          </view>
+          <view class="item-container">
+            <view class="title">{{item.name}}</view>
+            <view class="detail">
+              <span class="tag">{{item.category}}</span>
+              <span class="dec">{{item.deviceSerial}}</span>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="linkToweb" bindtap="_goToOpenweb" >前往官网了解详细信息</view>
+    </view>
+    <!-- 授权列表为空 -->
+    <view wx:if="{{authorizeDeviceList.length == 0 }}">
+      <view class="no-device-container">
+        <image class="no-device-content" src='./images/NoDevice@2x.png' />
+        <view class="empty-text">您还未获得授权设备</view>
+        <view class="linkTo" bindtap="_goToOpenweb" >前往官网了解详细信息</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 播放弹窗 -->
+<view class="device-play-container" wx:if="{{videoPlayModalShow === true}}">
+  <view class="paly-content">
+    <view class="title">{{deviceName}}</view>
+    <view class="video-container">
+      <live-player id="livePlayer" binderror="error" bindstatechange="statechange" mode="RTC" src="{{videoSrc}}" muted="{{!openSound}}" class="video-item" object-fit="{{objectFit}}"  catchtap="{{playVideo ? 'handleStop': 'handlePlay'}}">
+        <!-- loading状态 -->
+        <cover-view class="video-loading-container"  hidden="{{videoLoadingStatus === 100}}">
+          <cover-image class="video-loading-bg" src="./images/live_loading_bg.png"></cover-image>
+          <!-- 停止状态 -->
+          <cover-view class="video-loaing video-ready" hidden="{{videoLoadingStatus !== 0}}">
+            <cover-image class="play-gif" src="./images/playfill4.png" catchtap="handlePlay"></cover-image>
+          </cover-view>
+          <!-- 加载资源中状态 -->
+          <cover-view class="video-loaing" hidden="{{videoLoadingStatus === 0 || videoNetWorkError}}">
+            <cover-image class="loading-gif" src="./images/loading.png"></cover-image>
+            <cover-view class="video-loading-text">视频安全传输中...{{videoLoadingStatus}}%</cover-view>
+          </cover-view>
+        </cover-view>
+      
+        <!-- 加载资源失败状态 -->
+        <cover-view class="video-loading-container" hidden="{{ !videoNetWorkError}}">
+          <cover-image class="video-loading-bg" src="./images/live_loading_bg.png"></cover-image>
+          <cover-view class="video-loaing" ontap="handlePlay">
+            <cover-image class="loading-gif" src="./images/backward.png"></cover-image>
+            <cover-view class="video-loading-text" >播放失败，点击重试</cover-view>
+          </cover-view>
+        </cover-view>
+        <!-- 设备不在线状态 -->
+        <cover-view class="video-loading-container" hidden="{{!deviceOffline}}">
+          <cover-image class="video-loading-bg" src="./images/live_loading_bg.png"></cover-image>
+          <cover-view class="video-loaing">
+            <cover-image class="loading-gif" src="./images/preview_fail_offline.png"></cover-image>
+            <cover-view class="video-loading-text">设备不在线</cover-view>
+            <cover-view class="video-loading-text">离线时间：{{deviceOfflineTime}}</cover-view>
+          </cover-view>
+        </cover-view>
+        <!-- 控件 -->
+        <cover-view class="video-controls-container">
+          <!-- <cover-image class="controls-img" src='{{playVideo ? "./images/stop2.png":"./images/playfill4.png"}}' catchtap="{{playVideo ? 'handleStop': 'handlePlay'}}"></cover-image> -->
+          <cover-image class="controls-img" src='{{!openSound ? "./images/volumeoff.png":"./images/volumeon.png"}}' catchtap="handleSound"></cover-image>
+        </cover-view>
+      </live-player>
+    </view>
+  </view>
+  <span class="cancel-btn" >
+    <image bindtap="_playVideoModalHidden" class="cancel-icon" src="./images/delete.png" alt="" />
+  </span>
+</view>

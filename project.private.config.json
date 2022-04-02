@@ -1,0 +1,56 @@
+{
+  "setting": {},
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "首页",
+          "pathName": "pages/home/home",
+          "query": "",
+          "scene": 1011
+        },
+        {
+          "id": -1,
+          "name": "scan",
+          "pathName": "pages/live/live",
+          "query": "scene=9b1b2c3870ff5c3aa5776e446748c4b5",
+          "scene": 1011
+        },
+        {
+          "id": -1,
+          "name": "试用中心",
+          "pathName": "pages/experienceCenter/deviceTrust/home/home",
+          "query": "scene=9b1b2c3870ff5c3aa5776e446748c4b5",
+          "scene": null
+        },
+        {
+          "name": "自助设备",
+          "pathName": "pages/customDevice/customDevice",
+          "query": "type=playback",
+          "scene": null
+        },
+        {
+          "name": "packageA/pages/videoCasePage/videoCasePage",
+          "pathName": "packageA/pages/videoCasePage/videoCasePage",
+          "query": "mode=FISH_SWIMMING_DISTANCE",
+          "scene": null
+        },
+        {
+          "name": "pages/xp2p/index/index",
+          "pathName": "pages/xp2p/index/index",
+          "query": "accessToken=at.5gttx9zo2ohz1y1s0oukuy7yb8be5p1m-3uts236mtq-16392sz-ne4r96wgu&deviceSerial=203751922:1",
+          "scene": null
+        }
+      ]
+    }
+  }
+}

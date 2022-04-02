@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/preview/preview",
+    "pages/experienceDevice/experienceDevice",
+    "pages/live/live",
+    "pages/customDevice/customDevice",
+    "pages/playback/playback",
+    "pages/component/experienceApply/experienceApply",
+    "pages/experienceCenter/deviceTrust/home/home",
+    "pages/experienceCenter/deviceTrust/urlConfig/urlConfig",
+    "pages/experienceCenter/openweb/openweb",
+    "pages/experienceCenter/deviceTrust/login/login",
+    "pages/experienceCenter/deviceTrust/device/device",
+    "pages/experienceCenter/cloudRecord/home/home",
+    "pages/experienceCenter/cloudRecord/recordList/recordList",
+    "pages/experienceCenter/cloudRecord/catchPicture/catchpicture",
+    "pages/experienceCenter/cloudRecord/recordVideo/recordVideo",
+    "pages/experienceCenter/messageSend/home/home",
+    "pages/experienceCenter/messageSend/messageList/messageList",
+    "pages/component/dateTimePicker/dateTimePicker"
+  ],
+  "subpackages": [
+    {
+      "root": "packageA",
+      "pages": [
+        "pages/videoCasePage/videoCasePage",
+        "pages/index/index",
+        "pages/faceAnalysisCompare/faceAnalysisCompare",
+        "pages/intelligence/intelligence"
+      ]
+    }
+  ],
+  
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "萤石开放平台",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json"
+}

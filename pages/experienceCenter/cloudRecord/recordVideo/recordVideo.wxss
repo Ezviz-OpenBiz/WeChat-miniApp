@@ -1,0 +1,116 @@
+/* pages/experienceCenter/cloudRecord/recordVideo/recordVideo.wxss */
+
+.picker{
+  box-sizing: border-box;
+    padding: 13px;
+    background-color: #FFFFFF;
+}
+
+.recordVideo-form-container {
+  padding: 30px;
+}
+
+.recordVideo-form-container .formItem {
+  margin-bottom: 15px;
+}
+
+.recordVideo-form-container .formItem .formTitle {
+  margin-bottom: 5px;
+  height: 30px;
+  font-size: 14px;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 30px;
+  font-weight: 400;
+}
+
+.recordVideo-form-container .formItem .tips {
+  margin-left: 6px;
+  height: 30px;
+  font-size: 12px;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 30px;
+  font-weight: 400;
+}
+
+.recordVideo-form-container .formItem .enhance {
+  color: #FF5C5C;
+}
+
+.recordVideo-form-container .formItem .inputArea{
+  width: 100%;
+  height: 38px;
+  padding: 0px 8px;
+  border: 0.5px solid #DEDEDE;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.recordVideo-form-container .formItem .disabledInput {
+  background: #F8F8F8;
+  border: 0.5px solid #DEDEDE;
+  color: #999999;
+}
+
+.recordVideo-form-container .formItem .section {
+  display: flex;
+  height: 38px;
+  justify-content: flex-start;
+}
+
+.recordVideo-form-container .formItem .section .picker {
+  width: 150px;
+  margin-right: 15px;
+  height: 38px;
+  padding: 0px 8px;
+  border: 0.5px solid #DEDEDE;
+  font-size: 14px;
+}
+
+.recordVideo-form-container .formItem .radio-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.recordVideo-form-container .formItem .radio-group .radio-item {
+  width: 120px;
+}
+
+.save-btn-container {
+  position: fixed;
+  left: 15px;
+  right: 15px;
+  bottom: 28px;
+}
+
+.save-btn-container .save-btn {
+  height: 48px;
+  line-height: 48px;
+  background: #648FFC;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+}
+
+.save-btn-container .save-disabled-btn {
+  width: 100%;
+  margin-right: 30px;
+  height: 48px;
+  line-height: 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+  background: #648FFC;
+  filter:alpha(opacity=50);          
+  -moz-opacity:0.5;          
+  -khtml-opacity: 0.5;          
+  opacity: 0.5; 
+}

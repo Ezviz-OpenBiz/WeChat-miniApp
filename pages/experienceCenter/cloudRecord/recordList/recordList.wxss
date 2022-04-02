@@ -1,0 +1,274 @@
+.colud-record-container {
+  padding: 9px 15px;
+  height: 100vh;
+  overflow: hidden;
+  overflow-y: hidden;
+}
+
+.colud-record-container .head-bg-container{
+  width: 100%;
+  height: 135px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.colud-record-container .head-bg-container .head-bg{
+  width: 135px;
+  height: 135px;
+}
+
+.colud-record-container .deviceInfo {
+  width: 100%;
+  height: 52px;
+  line-height: 52px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.colud-record-container .deviceInfo .title{
+  font-size: 16px;
+  color: #2C2C2C;
+  letter-spacing: 0.19px;
+  font-weight: 400;
+}
+
+.colud-record-container .deviceInfo .content{
+  font-size: 14px;
+  color: #999999;
+  letter-spacing: 0.17px;
+  text-align: right;
+  font-weight: 400;
+}
+
+.colud-record-container .action-btn-group {
+  width: 100%;
+  height: 84px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.colud-record-container .action-btn-group .action-btn {
+  /* width: 163px; */
+  width: calc(50% - 15rpx);
+  height: 48px;
+  box-sizing: border-box;
+  line-height: 48px;
+  border: 1px solid #648FFC;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #648FFC;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.colud-record-container .divider {
+  position: fixed;
+    top: 337px;
+    left: 0px;
+    right: 0px;
+    height: 5px;
+    background: #F8F8F8;
+}
+.colud-record-container .recordList-container {
+  margin-top: 15px;
+}
+
+.colud-record-container .recordList-container .title-container {
+  width: 100%;
+  height: 83px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.colud-record-container .recordList-container .title-container .content-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.colud-record-container .recordList-container .title-container .content-container .icon {
+  width: 50px;
+  height: 50px;
+}
+
+.colud-record-container .recordList-container .title-container .content-container .content .contennt-title{
+  margin-left: 16px;
+  font-size: 16px;
+  color: #2C2C2C;
+  font-weight: 400;
+}
+
+.colud-record-container .recordList-container .title-container .content-container .content .content-tips {
+  margin-left: 16px;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #999999;
+  font-weight: 400;
+}
+
+.colud-record-container .recordList-container .title-container .action-btn {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.colud-record-container .recordList-container .title-container .action-btn .action-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* list */
+.colud-record-container .recordList-container .list-container {
+  height: calc(100vh - 460px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.colud-record-container .recordList-container .list-container .list-item {
+  width: 100%;
+  height: 52px;
+  line-height: 52px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.colud-record-container .recordList-container .list-container .list-item .name-container {
+  display: flex;
+  align-items: center;
+}
+
+.colud-record-container .recordList-container .list-container .list-item .name-container .icon{
+  width: 18px;
+  height: 18px;
+}
+
+.colud-record-container .recordList-container .list-container .list-item .name-container .name{
+  width: 178px;
+  margin-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.colud-record-container .recordList-container .list-container .list-item .action-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: right;
+  font-size: 14px;
+  color: #999999;
+  text-align: right;
+  font-weight: 400;
+}
+
+.colud-record-container .recordList-container .list-container .list-item .action-container .error-status {
+  color: #FF5C5C;
+}
+
+.colud-record-container .recordList-container .list-container .list-item .action-container .action-btn {
+  width: 24px;
+  height: 24px;
+}
+
+/* .colud-record-container .recordList-container .list-container {
+  height: 154px;
+  overflow-y: auto;
+  overflow-x: hidden;
+} */
+
+/* 录制列表为空 */
+.no-list-container {
+  /* margin-top: 32px; */
+  text-align: center;
+}
+.no-list-container .no-list-content {
+  width: 144px;
+  height: 106px;
+  margin: 0 auto;
+    
+}
+.no-list-container  .empty-text {
+  width: 100%;
+  font-size: 14px;
+  color: #666666;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+  text-align: center;
+}
+
+/* 操作-下载/删除/取消 */
+.operate-modal-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  height: 100%;
+  background-color: rgba(0,0,0,.4);
+  filter: alpha(opacity=50);
+}
+
+.operate-modal-mask-warp {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  overflow: auto;
+  outline: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.operate-modal-mask-warp .operate-conatiner {
+  position: fixed;
+  bottom: 105px;
+  left: 10px;
+  right: 10px;
+  box-sizing: border-box;
+  height: 130px;
+  padding: 20px 0px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #2C2C2C;
+  letter-spacing: 0.19px;
+  text-align: center;
+  font-weight: 400;
+}
+
+.operate-modal-mask-warp .operate-conatiner .download-btn {
+  color: #648FFC;
+}
+
+.operate-modal-mask-warp .operate-conatiner .action-btn {
+  height: 45px;
+  line-height: 45px;
+  cursor: pointer;
+}
+
+.operate-modal-mask-warp .operate-cancel {
+  position: fixed;
+  bottom: 40px;
+  left: 10px;
+  right: 10px;
+  height: 55px;
+  line-height: 55px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #2C2C2C;
+  letter-spacing: 0.19px;
+  text-align: center;
+  font-weight: 400;
+  cursor: pointer;
+}

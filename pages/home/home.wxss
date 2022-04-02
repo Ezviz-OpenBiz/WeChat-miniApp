@@ -1,0 +1,64 @@
+.page-home {
+}
+.page-home .entrance-container {
+  display: flex;
+  min-height: calc(100vh - 100px);
+  outline: 1px soild gray;
+  justify-content:space-between;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-wrap:wrap;
+  padding: 30px 40px;
+}
+.entrance-item {
+  display: inline-block;
+  width: 140px;
+  height: 145px;
+  text-align: center;
+  background: #F5F4F4;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+.entrance-item .link {
+  width: 140px;
+  height: 145px;
+}
+.link .disabled {
+  opacity: 0.3;
+}
+.entrance-imgage-container .entrance-image{
+  width: 80px;
+  height: 80px;
+  margin:15px 0 0;
+}
+.entrance-container .entrance-item .entrance-name {
+  font-size: 18px;
+  color: #333333;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.company {
+  margin-top: 20px;
+  text-align: center;
+}
+.company .company-logo {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+.company .company-name {
+  font-size: 14px;
+  color: #666666;
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: top;
+  font-weight: 400;
+}
+.page-home .hint {
+  height: 34px;
+  margin-top: 4px;
+  font-size: 10px;
+  color: #CCCCCC;
+  letter-spacing: 0;
+  text-align: center;
+}

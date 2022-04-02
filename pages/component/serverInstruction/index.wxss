@@ -1,0 +1,60 @@
+.experience-server-instruction {
+  padding: 15px;
+}
+
+.experience-server-instruction .title {
+  width: 285px;
+  height: 22px;
+  font-size: 16px;
+  color: #2C2C2C;
+  letter-spacing: 0.19px;
+  font-weight: 400;
+}
+
+.experience-server-instruction .content {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.experience-server-instruction .instruction_audio {
+  margin-top: 15px ;
+  width: 100%;
+  height: 83px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.experience-server-instruction .instruction_audio .tips .title {
+  width: 160px;
+  height: 22px;
+  font-size: 16px;
+  color: #2C2C2C;
+  font-weight: 400;
+}
+
+
+.experience-server-instruction .instruction_audio .tips .des {
+  margin-top: 10px;
+  width: 268px;
+  height: 21px;
+  font-size: 14px;
+  color: #999999;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.experience-server-instruction .instruction_audio .audio_play {
+  width: 40px;
+  height: 40px;
+}
+
+.experience-server-instruction .instruction_audio .audio_play .audio_play-icon {
+  width: 40px;
+  height: 40px;
+}

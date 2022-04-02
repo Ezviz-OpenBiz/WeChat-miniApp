@@ -1,0 +1,20 @@
+<!--pages/component/modal/modal.wxml-->
+<view wx:if="{{show === true}}">
+  <view class="modal-mask"></view>
+  <view class="modal-mask-warp">
+    <view class="modal-container">
+      <view class="modal-content">{{contentText}}</view>
+      <view class="modal-bottom">
+        <view wx:if="{{type === 'info'}}">
+          <view class="info-btn" bindtap="_handdleFun" >确认</view>
+        </view>
+        <view wx:if="{{type === 'confirm'}}">
+          <view class="btn-group">
+            <view class="cancel-btn" bindtap="_cancelFun" >取消</view>
+            <view class="confirm-btn" bindtap="_handdleFun" >确认</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
