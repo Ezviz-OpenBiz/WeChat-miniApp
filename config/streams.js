@@ -12,7 +12,6 @@ const serverMap = {
   // key是serverName，与具体视频流无关
   httpsSvr: {
     flvUrlBase: 'https://dev.ad.qvb.qcloud.com/openlive/',
-    // flvUrlBase:'rtmp://rtmp01open.ys7.com/openlive/'
   },
   // tcpSvr: {
   //   flvUrlBase: 'http://dev.ad.qvb.qcloud.com:12680/openlive/',
@@ -28,8 +27,7 @@ const serverStreams = {
   httpsStream0: {
     showInHomePageBtn: true,
     serverName: 'httpsSvr',
-    // flvFile: '6e0b2be040a943489ef0b9bb344b96b8.hd.flv',
-    flvFile:'f01018a141094b7fa138b9d0b856507b.hd.flv'
+    flvFile: '6e0b2be040a943489ef0b9bb344b96b8.hd.flv',
   },
   // tcpStream0: {
   //   showInHomePageBtn: true,

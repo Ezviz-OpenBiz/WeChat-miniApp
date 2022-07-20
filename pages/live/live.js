@@ -1,4 +1,18 @@
 import { DateFormat } from '../common/utils';
+// 生成uuid
+const wxuuid = function () {
+  var s = [];
+  var hexDigits = "0123456789abcdef";
+  for (var i = 0; i < 36; i++) {
+    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+  }
+  s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+  s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+  s[8] = s[13] = s[18] = s[23] = "-";
+ 
+  var uuid = s.join("");
+  return uuid
+};
 
 //index.js
 //获取应用实例
@@ -24,42 +38,58 @@ Page({
     channelNo: '1',
     list: [
       {
+        id: 'talk',
+        name: '对讲',
+        status: -1,
+        imageUrl: './image/talk.svg',
+        abnormalImage: './image/talk-disabled.svg'
+      },
+      {
         id: 'ptz',
         name: '云台控制',
         status: -1,
-        normalPath: './images/ptz.png',
-        disablePath: './images/ptz_disable.png',
-        activePath:'./images/ptz.png',
+        imageUrl: './image/yuntai.svg',
+        abnormalImage: './image/yuntai-disabled.svg'
       },
       {
         id: 'voice',
         name: '语音播报',
         status: -1,
-        normalPath: './images/voice.png',
-        disablePath: './images/voice_disable.png',
-        // activePath: './images/voice_active.png',
-        activePath: './images/voice.gif',
+        imageUrl: './image/record.svg',
+        abnormalImage: './image/record-disable.svg'
+      },
+      {
+        id: 'playback',
+        name: '回看',
+        status: 0,
+        imageUrl: './image/backward.svg',
+        abnormalImage: './image/backward.svg'
+      },
+      {
+        id: 'capture',
+        name: '截屏',
+        status: -1,
+        imageUrl: './image/picture-shoot.svg',
+        abnormalImage: './image/pictureshoot-disabled.svg'
       },
       {
         id: 'mirror',
         name: '镜像翻转',
         status: -1,
-        normalPath: './images/fanzhuan.png',
-        disablePath: './images/fanzhuan_disable.png',
-        activePath: './images/fanzhuan.png',
+        imageUrl: './image/jingxiang.svg',
+        abnormalImage: './image/jingxiang-disabled.svg'
       },
       {
         id: 'cover',
         name: '镜头遮蔽',
         status: -1,
-        normalPath: './images/yinsi.png',
-        disablePath: './images/yinsi_disable.png',
-        activePath: './images/yinsi_active.png',
+        imageUrl: './image/yinsi.svg',
+        abnormalImage: './image/yinsi-disabled.svg'
       },
     ],
     videoSrc:"",
     videoHDSrc: "",
-    panelStatus: 0, //0: 展示面板 1：进入云台 2-进入语音播报 3-进入镜像翻转 4-进入镜头遮蔽,
+    panelStatus: 0, //0: 展示面板 1：进入云台 2-进入语音播报 3-进入镜像翻转 4-进入镜头遮蔽 5-对讲,
     ptzDisabled: true,
     voiceDiasbled: true,
     mirrorDisabled: true,
@@ -73,7 +103,7 @@ Page({
     videoNetWorkError: false,
     objectFit:'contain',
     openSound: true,
-    isHD: false,
+    isHD: true,
     showHDSelect: false,
     fullScreen: false,
     ptzStatus: 0, //0-初始化 1-top noraml 2-downnoraml 3-left normal 4-right normal  5-top noraml 6-down limit 7-left limit 8-right limit
@@ -103,7 +133,34 @@ Page({
     dialogContent: '',
     buttons: [{text: '知道了'}],
     dialogShow: false,
-    pathParam: ''
+    pathParam: '',
+
+    // 对讲过程
+    talkStatus: 0, //0-未开始/结束，1-加载中，2-进行中, 3-启动失败, 4-设备对讲中
+    token1: '', // 用于邀请设备入会
+    token2: '', // 用于强制设备退会
+    websocketUrl: '',
+    customId: 'isZhangqianwei', // 开发者自定义用户id，以此换取clientId
+    clientId: 993089712, // 注意：通讯过程中真实的clientId，此处仅供调试，无需赋值
+    roomId: 0, // 注意：需要加入的房间号，需外部提供
+    joinPassword: '', // 注意：加入房间的密码，需外部提供
+    vtmHttpsAddress: '', 
+    vtmIp: 'test11.ys7.com', // 此处仅供调试，无需赋值
+    vtmPort: 8554, // 此处仅供调试，无需赋值
+    rtmpAddress: '', // push/play地址
+    rtmpPort: '', // 推流拉流端口地址
+    lockReconnect: false, // websocket重连
+    limit: 0,
+    timer: null,
+    pushVideo: true, // 推流
+    pushVideoContext: null,
+    pushUrl: '', // 推流地址
+    livePlayerContext: [
+      
+    ], // 播放节点
+    showVideoControls: false,
+    videoNetWorkError: false,
+    playSrc: '', // 播放地址
   },
   onLaunch(){
     console.log(onLaunch);
@@ -143,7 +200,7 @@ Page({
       accessToken: accessToken,
       deviceSerial: deviceSerial,
       channelNo: channelNo,
-      panelStatus:0,
+      panelStatus:0, // todo -0
     });
     
       this.getPlayUrl();
@@ -245,6 +302,10 @@ Page({
     console.log("livePlayerContext", livePlayerContext);
     
   },
+
+  initPannel (moduleId) {
+
+  },
   checkNetWork(){
     const _this = this;
     wx.getNetworkType({
@@ -282,6 +343,7 @@ Page({
         const { list } = this.data;
         if(res.data.code ==200 && res.data.data && res.data.data.url){
           var result = res.data;
+          
           if(result.code == 200){
             _this.setData({
               videoSrc: result.data.url,
@@ -291,7 +353,9 @@ Page({
             list[0].status = -1;
             list[1].status = -1;
             list[2].status = -1;
-            list[3].status = -1;
+            list[4].status = -1;
+            list[5].status = -1;
+            list[6].status = -1;
             _this.setData({
               list:list,
               dialogContent: result.msg,
@@ -335,10 +399,12 @@ Page({
               videoHDSrc: result.data.url,
             })
           }else {
-            list[0].status = -1;
+            llist[0].status = -1;
             list[1].status = -1;
             list[2].status = -1;
-            list[3].status = -1;
+            list[4].status = -1;
+            list[5].status = -1;
+            list[6].status = -1;
             _this.setData({
               list:list,
               dialogContent: result.msg,
@@ -376,10 +442,13 @@ Page({
           const result = res.data.data;
           let list = this.data.list;
           if(result.enable == 1){ // 当前镜头遮蔽中
+           
             list[0].status = -1;
             list[1].status = -1;
             list[2].status = -1;
-            list[3].status = 1;
+            list[4].status = -1;
+            list[5].status = -1;
+            list[6].status = 1;
             this.setData({
               videoNetWorkError: false,
               showVideoControls: false,
@@ -438,7 +507,9 @@ Page({
             list[0].status = -1;
             list[1].status = -1;
             list[2].status = -1;
-            list[3].status = -1;
+            list[4].status = -1;
+            list[5].status = -1;
+            list[6].status = -1;
             _this.setData({
               list:list,
               showVideoControls: false
@@ -447,7 +518,9 @@ Page({
             list[0].status = -1;
             list[1].status = -1;
             list[2].status = -1;
-            list[3].status = -1;
+            list[4].status = -1;
+            list[5].status = -1;
+            list[6].status = -1;
             _this.setData({
               list:list,
               dialogTitle: '设备被加密',
@@ -509,13 +582,16 @@ Page({
       if(res.data.code ==200 && res.data.data){
         var result = res.data.data;
         let list = this.data.list;
-        list[0].status = result.support_ptz == 0 ? -1 : 0;
-        list[1].status = result.support_talk != 1 ? -1 : 0;
-        list[2].status = result.ptz_top_bottom_mirror == 0 ? -1 : 0;
-        list[3].status = result.support_privacy == 0 ? -1 : 0;
+        list[0].status = result.support_talk != (1 || 4) ? -1 : 0;
+        list[1].status = result.support_ptz == 0 ? -1 : 0;
+        list[2].status = result.support_talk != 1 ? -1 : 0;
+        list[5].status = result.ptz_top_bottom_mirror == 0 ? -1 : 0;
+        list[6].status = result.support_privacy == 0 ? -1 : 0;
         if(!playVideo){ // 非视频播放成功状态下
           list[0].status = -1;
-          list[2].status = -1;
+          list[1].status = -1;
+          list[4].status = -1;
+          list[5].status = -1;
         }
         _this.setData({
           list: list,
@@ -668,6 +744,8 @@ Page({
   },
   handlePlay(callback){
     console.log("handelPlay",this.data.playVideo,this.data.isHD);
+    console.log('播放地址：',this.data.isHD, this.data.videoHDSrc, this.data.videoSrc)
+      let {list} = this.data;
       this.checkNetWork()
       livePlayerContext.play({
         success: ()=>{
@@ -688,26 +766,24 @@ Page({
             icon:'none',
           })
           console.log("开始播放失败");
+          list[4].status = 0;
           this.setData({
             videoNetWorkError: true,
             showVideoControls: false,
             videoLoadingStatus: 100,
+            list: [...list]
           })
         }
       })
   },
   handleStop(callback){
     console.log("stop");
-    const { list } = this.data;
+    let { list } = this.data;
     livePlayerContext.stop({
       success: ()=>{
-        list[0].status = -1;
-        // list[1].status = -1;
-        // list[2].status = -1;
-        // list[3].status = -1;
+        list[1].status = -1;
         this.setData({
           playVideo: false,
-          // showVideoControls: true,
           videoLoadingStatus: 0,
           list: list,
           panelStatus: 0,
@@ -765,7 +841,8 @@ Page({
   statechange(e) {
     console.log('live-player code:', e.detail.code,e.detail);
     const { code } = e.detail;
-    let { videoLoadingStatus,list,panelStatus } = this.data;
+    let { videoLoadingStatus, panelStatus } = this.data;
+    const {list} = this.data;
     switch (code){
       case 2007: //启动loading
         videoLoadingStatus = 0;
@@ -789,8 +866,11 @@ Page({
         break;
       case 2003: //网络接收到首个视频数据包(IDR)
       videoLoadingStatus = 100;
+      // let {list} = this.data;
+      list[4].status = 0;
       this.setData({
         playVideo: true,
+        list: [...list]
       })
       this.autoHideControl();
       this.getDeviceCapacity();
@@ -809,7 +889,9 @@ Page({
       // this.getDeviceInfo();
       this.checkNetWork();
       this.handleStop(this.playError);
-      list[2].status = -1;
+      
+      list[5].status = -1;
+      list[4].status = -1
       this.setData({
         // playVideo: false,
         showVideoControls: false,
@@ -820,11 +902,15 @@ Page({
       break;
       case -2301: // 经多次重连抢救无效，更多重试请自行重启播放
         videoLoadingStatus = 100;
+ 
+        list[5].status = -1;
+        list[4].status = -1
         this.setData({
           // playVideo: false,
           showVideoControls: false,
           videoNetWorkError: true,
           videoLoadingStatus: 100,
+          list: [...list]
         })
         break;
     }
@@ -877,62 +963,57 @@ Page({
     var list = this.data.list;
     var panelStatus = this.data.panelStatus;
     switch (tValue) {
-      case 'ptz':
+      case 'talk':
         if(list[0].status === -1){
           return false;
         }
+        panelStatus = 5;
+        this.initTalk();
+        break;
+      case 'ptz':
+        if(list[1].status === -1){
+          return false;
+        }
         panelStatus = 1;
-        // list[0].status = 1;
-        // list[1].status = 0;
-        // list[2].status = 0;
-        // list[3].status = 0;
         break;
       case 'voice':
-        if(list[1].status === -1) {
+        if(list[2].status === -1) {
           return false;
         }
         panelStatus = 2;
         this.getDefaultVoice();
         this.getCustomVoice();
         break;
+      case 'playback':
+        this.goToLive();
+        break;
+      case 'capture':
+        if(list[4].status === -1) {
+          return false;
+        }
+        this.screenShoot()
+        break;
       case 'mirror':
-        if(list[2].status === -1){
+        if(list[5].status === -1){
           return false;
         }
         if(panelStatus === 3){
           panelStatus = 0;
-          // list[0].status = 0;
-          // list[1].status = 0;
-          list[2].status = 0;
-          // list[3].status = 0;
+          list[4].status = 0;
+          list[5].status = 0;
           this.sceneMirror(2);
         }else{
           panelStatus = 3;
-          // list[0].status = 0;
-          // list[1].status = 0;
-          // list[2].status = 1;
-          // list[3].status = 0;
           this.sceneMirror(2);
         }
         break;
       case 'cover':
-        if(list[3].status === -1){
+        if(list[6].status === -1){
           return false;
         }
         if (panelStatus === 4){ // 镜头遮蔽中
-          // panelStatus = 0;
-          // list[0].status = 0;
-          // list[1].status = 0;
-          // list[2].status = 0;
-          // list[3].status = 0;
-          // this.getDeviceCapacity();
           this.sceneCover(0);
         }else{
-          // panelStatus = 4;
-          // list[0].status = 0;
-          // list[1].status = 0;
-          // list[2].status = 0;
-          // list[3].status = 1;
           this.sceneCover(1);
         }
         break;
@@ -1252,7 +1333,7 @@ authConfirm(){
         console.log(res.data);
         if(res.data.code == 200){
           if(enable == 0){
-            list[3].status = 0;
+            list[6].status = 0;
             panelStatus = 0;
             videoNetWorkError = false;
             this.getDeviceCapacity();
@@ -1261,9 +1342,14 @@ authConfirm(){
             list[0].status = -1;
             list[1].status = -1;
             list[2].status = -1;
+            list[4].status = -1;
+            list[5].status = -1;
             panelStatus = 4;
-            list[3].status = 1;
+            list[6].status = 1;
             // this.handleStop();
+            this.setData({
+              playVideo: false
+            })
           }
           setTimeout(()=>{
             this.setData({
@@ -1273,7 +1359,7 @@ authConfirm(){
           this.setData({
             videoNetWorkError: videoNetWorkError,
             list:list,
-            panelStatus:panelStatus
+            panelStatus:panelStatus,
           })
         }else {
           wx.showToast({
@@ -1373,14 +1459,14 @@ authConfirm(){
         console.log(res.data);
         const { list } = this.data;
         if(res.data.code == 200){
-          list[1].status = 1;
+          list[2].status = 1;
           this.setData({
             activeCustomVoiceName:  type === 'custom' ? voiceName : '',
             activeDefaultVoiceName: type === 'default' ? voiceName : '',
             list: list,
           });
           setTimeout(()=>{
-            list[1].status = 0;
+            list[2].status = 0;
             this.setData({
               activeCustomVoiceName:  '',
               activeDefaultVoiceName: '',
@@ -1552,4 +1638,734 @@ authConfirm(){
       url: url,
     })
   },
+
+  // 对讲-------------------
+  // 退出对讲
+  exitTalk () {
+    this.setData({
+      panelStatus:0,
+      talkStatus:0,
+      pushUrl: ''
+    });
+    this.websocketClose();
+  },
+
+  // 进入对讲pannel
+  initTalk() {
+    // 初始化当前用户id
+    const uuid = wxuuid();
+    this.setData({
+      customId: uuid,
+      talkStatus: 1
+    });
+    this.startTalk()
+  },
+
+  // 重试
+  tryTalkAgain() {
+    // 初始化当前用户id
+    const uuid = wxuuid();
+    this.setData({
+      customId: uuid,
+      talkStatus: 1
+    });
+    this.websocketClose();
+    this.startTalk();
+  },
+
+ 
+// 开始对讲-①获取设备能力集
+startTalk(){
+  const {accessToken, deviceSerial} = this.data;
+  wx.request({
+    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/capacity`,
+    method: 'POST',
+    data: {
+      accessToken: accessToken,
+      deviceSerial: deviceSerial,
+    },
+    header: {
+      'content-type': 'application/x-www-form-urlencoded', // 默认值
+    },
+    success:(res) => {
+      console.log('设备能力集:',res.data);
+      if (res.data.code == 200) {
+        const supportTalk = res.data.data.support_talk;
+        console.log('supportTalk', supportTalk);
+        if (supportTalk == 1 || 4) {
+          // 设备能力集中为1/4表示支持全双工
+          this.getToken()
+        }
+      }
+    },
+    fail: (err)=>{
+      console.log(err);
+    }
+  })
+},
+
+// 对讲-②获取两个取流token
+getToken(){
+  const {accessToken} = this.data;
+  wx.request({
+    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/user/token`,
+    method: 'POST',
+    data: {
+      accessToken: accessToken,
+      count: 2,
+      clientType: "0",
+      featureCode:"123",
+      osVersion:"2.3.6",
+      sdkVersion:"v.1.0.20140720",
+      netType:"UNKNOWN"
+    },
+    header: {
+      'content-type': 'application/x-www-form-urlencoded', // 默认值
+    },
+    success:(res) => {
+      console.log('取流token:',res.data);
+      if (res.data.resultCode == 200) {
+        const tokens = res.data.tokenArray;
+        if (tokens && tokens.length == 2) {
+          this.setData({
+            token1: tokens[0],
+            token2: tokens[1]
+          });
+          // 创建房间，并查询房间信息
+          this.orderRoom()
+        }
+      }
+    },
+    fail: (err)=>{
+      console.log(err);
+    }
+  })
+},
+
+// 对讲-③创建房间并查询房间信息
+orderRoom(){
+  // 检查网络状态
+  this.checkNetWork();
+
+  const { customId, accessToken } = this.data;
+  wx.request({
+    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/v3/conference/gen`,
+    method: 'POST',
+    data: {
+      accessToken: accessToken,
+      customId: customId,
+    },
+    header: {
+      'content-type': 'application/x-www-form-urlencoded', 
+    },
+    success:(res) => {
+      console.log('预定创建并查询房间信息:',res.data);
+      const code =  res.data.code || res.data.meta.code
+      if (code == 200) {
+        const clientId = res.data.clientId;
+        const conferenceInfos = res.data.conferenceInfos;
+        const roomId = conferenceInfos.roomId;
+        const vtmHttpsAddress = conferenceInfos.vtmHttpsAddress;
+        const vtmAddress = conferenceInfos.vtmAddress;
+        let vtmIp = '', vtmPort = '';
+        if (vtmAddress && vtmAddress.length > 0) {
+          vtmIp = vtmAddress.split(':')[0];
+          vtmPort = vtmAddress.split(':')[1];
+        }
+        this.setData({
+          clientId: clientId,
+          vtmHttpsAddress: vtmHttpsAddress,
+          vtmIp: vtmIp,
+          vtmPort: vtmPort,
+          roomId: roomId
+        }, () => {
+          const {clientId, vtmHttpsAddress,vtmIp, vtmPort} = this.data;
+          console.log('获取房间信息-','clientId:',clientId ,'vtmHttpsAddress:', vtmHttpsAddress, 'vtmIp:',vtmIp,'vtmPort:',vtmPort);
+          this.advanceDevice()
+        })
+      } else if (code == '10002') {
+        wx.showToast({
+          title: 'accessToken过期或异常',
+          icon: 'none'
+        })
+      } else if (code == '404') {
+        wx.showToast({
+          title: '未找到房间信息',
+          icon: 'none'
+        })
+      } else  {
+        wx.showToast({
+          title: '创建房间-'+res.data.meta.message,
+          icon: 'none'
+        });
+        this.setData({
+          talkStatus: 3 // 启动失败
+        })
+      }
+    },
+    fail: (err)=>{
+      console.log(err);
+    }
+  })
+},
+
+// 对讲-④邀请设备入会
+advanceDevice() {
+  const {accessToken, roomId, deviceSerial, channelNo, token1} = this.data;
+  wx.request({
+    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/v3/conference/device/invite`,
+    method: 'POST',
+    data: {
+      accessToken: accessToken,
+      roomId: roomId,
+      deviceSerial: deviceSerial,
+      channelNo: channelNo,
+      mode: 2,
+      authType: 5,
+      token: token1
+    },
+    header: {
+      'content-type': 'application/x-www-form-urlencoded', // 默认值
+    },
+    success:(res) => {
+      console.log('邀请设备入会:',res.data);
+      if (res.data.meta.code == 200) {
+        console.log('邀请设备入会成功，加入模式为对讲模式');
+        this.getWebsocket()
+      } else {
+        if (res.data.meta.code == 80502) {
+          this.setData({
+            talkStatus: 4 // 设备对讲中
+          })
+        } else {
+          wx.showToast({
+            title: '邀请设备入会-'+ res.data.meta.message,
+            icon: 'none'
+          });
+          this.setData({
+            talkStatus: 3 // 启动失败
+          })
+        }
+        
+      }
+    },
+    fail: (err)=>{
+      console.log(err);
+      this.setData({
+        talkStatus: 3 // 启动失败
+      })
+    }
+  })
+
+},
+
+// 对讲-⑤强制设备退会
+exitDevice() {
+  const {accessToken, roomId, deviceSerial, channelNo, token2} = this.data;
+  wx.request({
+    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/v3/conference/device/kickout`,
+    method: 'POST',
+    data: {
+      accessToken: accessToken,
+      roomId: roomId,
+      deviceSerial: deviceSerial,
+      channelNo: channelNo,
+      authType: 5,
+      token: token2
+    },
+    header: {
+      'content-type': 'application/x-www-form-urlencoded', // 默认值
+    },
+    success:(res) => {
+      console.log('强制设备退出房间:',res.data);
+      if (res.data.meta.code == 200) {
+        console.log('强制设备退出房间成功');
+        // this.getWebsocket()
+      } else {
+        wx.showToast({
+          title: '强制设备退出房间-'+ res.data.meta.message,
+          icon: 'none'
+        });
+      }
+    },
+    fail: (err)=>{
+      console.log(err);
+    }
+  })
+
+},
+
+// 获取websocket地址
+getWebsocket () {
+  const { vtmHttpsAddress, roomId } = this.data;
+  
+  const url = 'https://' + vtmHttpsAddress + '/vtm/rtmpavc/' + roomId;   // 注意：此处需配置小程序域名 
+  // const url = 'https://vtmrcgnginx.ys7.com:8555/vtm/rtmpavc/' + roomId;  
+  wx.request({
+    url: url,
+    method: 'GET',
+    header: {
+      'content-type': 'application/x-www-form-urlencoded', // 默认值
+    },
+    success:(res) => {
+      console.log('vtm连接返回：',res.data);
+      if (res.data.retcode == 0 || res.data.retcode == 200) {
+        const wsurl = 'wss://' + res.data.serverAddr + ':' + res.data.serverPort+'/rtmpavc'; // 注意：此处需配置小程序域名
+        
+        this.setData({
+          websocketUrl: wsurl,
+          rtmpAddress: res.data.serverAddr
+        }, () => {
+          // 连接websocket
+          this.socketConfig();
+        })
+      } else if (res.data.retcode == 503) {
+        wx.showToast({
+          title: '无可用服务',
+          icon: 'none'
+        });
+        this.setData({
+          talkStatus: 3 // 启动失败
+        });
+        this.exitDevice()
+      } else {
+        console.log('获取websocket地址失败', res.data.retcode);
+        wx.showToast({
+          title: '获取websocket地址失败',
+          icon: 'none'
+        });
+        this.setData({
+          talkStatus: 3 // 启动失败
+        });
+        this.exitDevice()
+      }
+    },
+    fail: (err)=>{
+      console.log('获取websocket地址失败', err);
+      wx.showToast({
+        title: '获取websocket地址失败',
+        icon: 'none'
+      });
+      this.setData({
+        talkStatus: 3 // 启动失败
+      })
+    }
+  })
+},
+
+// 配置socket
+socketConfig () {
+  let that = this;
+  const { websocketUrl, clientId } = this.data;
+  if (Object.keys(app.globalData.socketTask).length <= 0 || app.globalData.socketTask.readyState === 3) {
+    console.log('开始连接socket');
+    // socketTask的属性值readyState，取下面4个状态值：CONNECTING: 0 连接中 、OPEN: 1 已连接 、CLOSING: 2 关闭中 、CLOSED: 3 已关闭
+    // 直接判断SocketTask对象的属性值readyState，如果是1的话就表示连接可用。
+    console.log('websocketURL:', websocketUrl);
+    let socketTask = null;
+  
+    const websocketConnect = new Promise((resolve, reject) => {
+      socketTask = wx.connectSocket({
+        url: websocketUrl,
+        // url: 'wss://test12jsdecoder.ys7.com/?version=0.1&cipherSuites=0&sessionID=',
+        success: res => {
+          console.log('connectSocket连接中', res);
+          wx.showToast({
+            title: 'websocket连接中,请稍候',
+            icon: 'none'
+          });
+          resolve(res);
+        },
+        fail: err => {
+          console.log('connectSocket失败', err);
+          wx.showToast({
+            title: 'webSocket连接失败',
+            icon: 'none'
+          });
+          this.setData({
+            talkStatus: 3 // 启动失败
+          });
+          this.exitDevice()
+        }
+      });
+    });
+
+    websocketConnect.then(data => {
+      if (data.errMsg == 'connectSocket:ok') {
+        app.globalData.socketTask = socketTask;
+        that.initEventHandle();
+      }
+    });
+    
+  }
+},
+
+// 初始化websocket事件
+initEventHandle() {
+  const socketTask = app.globalData.socketTask;
+  const that = this;
+  const { clientId, roomId, joinPassword, vtmIp, vtmPort, rtmpAddress } = this.data;
+  
+  socketTask.onOpen((res) => {
+    console.log('监听WebSocket开启', res);
+    // 打开bav会话
+    let param ={
+      cmdType:1000,
+      vtmIp: vtmIp,
+      vtmPort: parseInt(vtmPort),
+      clientId: clientId,
+      roomId: roomId,
+      authentication: `roomId=${roomId}&password=${joinPassword}`,
+      mode: 2
+    };
+
+    if (socketTask.readyState === 1) {
+      wx.sendSocketMessage({
+        data: JSON.stringify(param)
+      });
+      console.log('websocket发送给服务端的消息:', param)
+    }
+  });
+
+
+  socketTask.onMessage((res) => {
+    console.log('接收到WebSocket消息', res);
+    
+    if (res.data) {
+      const result = JSON.parse(res.data);
+      
+      if (result.cmdType == '1003') {
+        // 微信小程序推流
+        const rtmpPort = result.rtmpPort;
+        const rtmpIp = result.rtmpIp ? result.rtmpIp : rtmpAddress;
+        const pushUrl = `rtmp://${rtmpIp}:${rtmpPort}/livestream/wechat?roomId=${roomId}&pushClientId=${clientId}`;
+        console.log('推流地址:', pushUrl);
+
+        that.setData({
+          pushUrl: pushUrl,
+          talkStatus: 2 // 对讲
+        }, () => {
+          var pushcontext = wx.createLivePusherContext('livePusher', this);
+          that.setData({
+            pushVideoContext: pushcontext
+          });
+          // 开始推流
+          that.startPush()
+        });
+
+      } 
+      else if (result.cmdType == '1002') 
+
+      {
+        // 微信小程序拉流
+      
+        const playClientId = result.playClientId;
+        const rtmpPort = result.rtmpPort;
+        const rtmpIp = result.rtmpIp ? result.rtmpIp : rtmpAddress;
+        const playSrc = `rtmp://${rtmpIp}:${rtmpPort}/livestream/wechat?roomId=${roomId}&pushClientId=${clientId}&playClientId=${playClientId}`;
+        console.log('拉流地址:', playSrc);
+        this.setData({
+          talkStatus: 2, // 对讲
+          playSrc: playSrc
+        }, () => {
+            // 初始化play
+            const playcontext = wx.createLivePlayerContext('talk-liveplayer', that);
+                      
+            console.log('当前拉流窗口~~~~~', playcontext);
+            // 播放
+            that.autoPlay(playcontext);
+        });
+        
+        
+
+      } 
+      else if (result.cmdType == '1005') {
+        // 某端退出房间
+        const curPlayClientId = 'paly' + result.playClientId;
+        wx.showToast({
+          title: result.playClientId + '将关闭',
+          icon: 'none'
+        });
+        this.setData({
+          talkStatus: 3 // 对讲失败
+        });
+        // 对应播放端停止播放
+        console.log('当前退出窗口', curPlayClientId);
+        
+
+      }
+      else if (result.cmdType == '1001') {
+        const code = result.code;
+        const msg = result.msg;
+
+        console.log('websocket返回的msg',code + '-->'+ msg);
+        let content = '';
+        
+        switch (code) {
+          case 0:
+            break;
+          case 10001:
+            content = 'websocket请求参数错误';
+            break;
+          case 10002:
+            content = 'flv转封装失败';
+            break;
+          case 10003:
+            content = 'rtp转封装失败';
+            break;
+          case 10004:
+            content = 'rtmp读写错误	';
+            break;
+          case 10005:
+            content = 'rtmp接收缓存溢出';
+            break;
+          case 6:
+            content = '连接sts服务失败';
+            break;
+          case 11:
+            content = '无效的房间号';
+            break;
+          case 14:
+            content = 'sts连接vtm失败';
+            break;
+          case 17:
+            content = '房间已满';
+            break;
+          case 18:
+            content = 'auth认证失败';
+            break;
+          case 35:
+            content = '房间号不存在';
+            break;
+        }
+        if (content) {
+          wx.showToast({
+            title: content,
+            icon: 'none',
+            duration: 300
+          });
+          // 关闭websocket
+          that.websocketClose();
+          this.setData({
+            talkStatus: 3 // 对讲失败
+          });
+        }
+        
+      }
+    }
+  })
+
+  socketTask.onClose((res) => {
+    console.log('WebSocket已关闭', res);
+    wx.showToast({
+      title: 'websocket连接已关闭',
+      icon: 'none'
+    })
+    // 监听到websocket关闭,关闭推流
+    this.stopPush();
+    // 强制
+    this.exitDevice();
+    this.setData({
+      talkStatus: 3 // 对讲失败
+    });
+  })
+
+  socketTask.onError((err) => {
+    console.log('WebSocket连接失败', err)
+    wx.showToast({
+      title: 'WebSocket连接失败',
+      icon: 'none'
+    });
+    // 强制
+    this.exitDevice();
+    this.setData({
+      talkStatus: 3 // 对讲失败
+    });
+  })
+},
+
+// 关闭websocket
+websocketClose () {
+  // 关闭websocket连接
+  const socketTask = app.globalData.socketTask;
+  const that = this;
+  this.exitDevice()
+  const { clientId, roomId } = this.data;
+  if (Object.keys(socketTask).length === 0) {
+    return
+  }
+  
+  // 关闭bav会话
+  let param ={
+    cmdType:1004, // 通知服务端断开websocket
+    clientId: clientId,
+    roomId: roomId,
+  };
+  wx.sendSocketMessage({
+    data: JSON.stringify(param)
+  });
+  console.log('websocket发送给服务端的消息:', param)
+  
+  socketTask.close({
+    code: 1000,
+    success: (res) => {
+      console.log('websocket已断开连接', res)
+    }
+  })
+},
+
+
+// push
+pusherStateChange: function(e){
+  console.log('>>> live-pusher onPushStateChange:', e.detail.code);
+  const code = e.detail.code;
+  let content = '';
+  switch (code) {
+    case 1001:
+      console.log('code', code, '已经连接推流服务器');
+      break;
+    case 1002:
+      console.log('code', code, '已经与服务器握手完毕,开始推流');
+      break;
+    case 1003:
+      console.log('code', code, '打开摄像头成功');
+      break;
+    case 1004:
+      console.log('code', code, '录屏启动成功');
+      break;
+    case 1005:
+      console.log('code', code, '推流动态调整分辨率');
+      break;
+    case 1006:
+      console.log('code', code, '推流动态调整码率');
+      break;
+    case 1007:
+      console.log('code', code, '首帧画面采集完成, 推流成功');
+      break;
+    case 1008:
+      console.log('code', code, '编码器启动');
+      break;
+    case -1301:
+      console.log('code', code, '打开摄像头失败');
+      break;
+    case -1302:
+      console.log('code', code, '打开麦克风失败');
+      break;
+    case -1303:
+      console.log('code', code, '视频编码失败');
+      break;
+    case -1304:
+      console.log('code', code, '音频编码失败');
+      break;
+    case -1306:
+      console.log('code', code, '不支持的音频采样率');
+      break;
+    case -1307:
+      console.log('code', code, '网络断连，且经多次重连抢救无效，更多重试请自行重启推流');
+      content = '网络出错，推流失败';
+      break;
+    case -1308:
+      console.log('code', code, '开始录屏失败，可能是被用户拒绝');
+      break;
+    case -1309:
+      console.log('code', code, '录屏失败，不支持的Android系统版本，需要5.0以上的系统');
+      break;
+    case -1310:
+      console.log('code', code, '录屏被其他应用打断了');
+      break;
+    case -1311:
+      console.log('code', code, 'Android Mic打开成功，但是录不到音频数据');
+      break;
+    case -1312:
+      console.log('code', code, '录屏动态切横竖屏失败');
+      break;
+    case 1101:
+      console.log('code', code, '网络状况不佳：上行带宽太小，上传数据受阻');
+      break;
+    case 1102:
+      console.log('code', code, '网络断连, 已启动自动重连');
+      break;
+    case 1103:
+      console.log('code', code, '硬编码启动失败,采用软编码');
+      break;
+    case 1104:
+      console.log('code', code, '视频编码失败');
+      break;
+    case 1105 || 1106:
+      console.log('code', code, '新美颜软编码启动失败，采用老的软编码');
+      break;
+    case 3001:
+      console.log('code', code, 'RTMP -DNS解析失败');
+      break;
+    case 3002:
+      console.log('code', code, 'RTMP服务器连接失败');
+      break; 
+    case 3003:
+      console.log('code', code, 'RTMP服务器握手失败');
+      break;  
+    case 3004:
+      console.log('code', code, 'RTMP服务器主动断开，请检查推流地址的合法性或防盗链有效期');
+      break; 
+    case 3005:
+      console.log('code', code, 'RTMP 读/写失败');
+      break;
+    default:
+      console.log('未知错误')
+      break;
+  };
+  wx.showToast({
+    title: content,
+    icon: 'none'
+  })
+},
+
+stopPush(){
+  console.log('停止推流');
+  this.data.pushVideoContext.stop();
+  this.setData({
+    pushVideo: false
+  })
+},
+
+startPush(){
+  console.log('开始推流，推流地址为:', this.data.pushUrl);
+  wx.showToast({
+    title: '开始推流，推流地址为:',
+  })
+  wx.showToast({
+    title: this.data.pushUrl,
+  })
+  this.data.pushVideoContext.start();
+  this.setData({
+    pushVideo: true
+  })
+},
+
+
+error(e) {
+  console.log('live-player',e);
+  console.error('live-player error:', e.detail.errMsg)
+  if(e.detail.errCode == 10001){
+    wx.showToast({
+      title: '视频播放或录制需要你手机授权微信录音或麦克风权限',
+      icon:'none',
+      duration:3000,
+    })
+  }
+},
+
+autoPlay(curPlayerContext) {
+  this.checkNetWork();
+  curPlayerContext.play({
+    success: ()=>{
+      console.log('播放对讲音频成功');
+      
+    },
+    fail: (error)=>{
+      
+      console.log('播放对讲音频失败：',error);
+    }
+  })
+},
+
 })

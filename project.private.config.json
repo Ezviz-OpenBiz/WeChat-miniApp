@@ -26,9 +26,8 @@
           "scene": 1011
         },
         {
-          "id": -1,
-          "name": "试用中心",
-          "pathName": "pages/experienceCenter/deviceTrust/home/home",
+          "name": "工单列表页面",
+          "pathName": "packageC/pages/worklist/worklist",
           "query": "scene=9b1b2c3870ff5c3aa5776e446748c4b5",
           "scene": null
         },
@@ -39,15 +38,45 @@
           "scene": null
         },
         {
-          "name": "packageA/pages/videoCasePage/videoCasePage",
-          "pathName": "packageA/pages/videoCasePage/videoCasePage",
-          "query": "mode=FISH_SWIMMING_DISTANCE",
+          "name": "提交工单",
+          "pathName": "packageC/pages/workForm/workForm",
+          "query": "inviteWorkListNum=2022-07-06-577575&inviteWorkListStatus=",
           "scene": null
         },
         {
-          "name": "pages/xp2p/index/index",
-          "pathName": "pages/xp2p/index/index",
-          "query": "accessToken=at.5gttx9zo2ohz1y1s0oukuy7yb8be5p1m-3uts236mtq-16392sz-ne4r96wgu&deviceSerial=203751922:1",
+          "name": "工单详情",
+          "pathName": "packageC/pages/workDetail/workDetail",
+          "query": "userType=0&workListNum=2022-06-21-625419",
+          "scene": null
+        },
+        {
+          "name": "pages/live/live",
+          "pathName": "pages/live/live",
+          "query": "accessToken=at.7ls1bf10999okj347lgh1v3y9l4gs1sa-83922l5j69-0z8d37g-md7mrbnhx&deviceSerial=D88600067&channelNo=1",
+          "scene": null
+        },
+        {
+          "name": "沟通",
+          "pathName": "packageC/pages/contactList/contactList",
+          "query": "workListNum=2022-07-06 21:28:20",
+          "scene": null
+        },
+        {
+          "name": "packageC/pages/workScore/workScore",
+          "pathName": "packageC/pages/workScore/workScore",
+          "query": "?workListNum=2022-06-21-625419",
+          "scene": null
+        },
+        {
+          "name": "沟通",
+          "pathName": "packageC/pages/contactList/contactList",
+          "query": "workListNum=2022-06-24-284224",
+          "scene": null
+        },
+        {
+          "name": "packageC/pages/login/login",
+          "pathName": "packageC/pages/login/login",
+          "query": "",
           "scene": null
         }
       ]

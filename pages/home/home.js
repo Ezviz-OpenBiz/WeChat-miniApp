@@ -33,21 +33,35 @@ Page({
       {
         id: 'experienceCenter',
         name: '设备托管',
-        path: '../experienceCenter/deviceTrust/home/home',
+        path: '../../packageA/pages/experienceCenter/deviceTrust/home/home',
         icon: './images/home_icon_tuoguan.png',
       },
       {
         id: 'experienceCenter',
         name: '云录制',
-        path: '../experienceCenter/cloudRecord/home/home',
+        path: '../../packageA/pages/experienceCenter/cloudRecord/home/home',
         icon: './images/home_icon_yunluzhi.png',
       },
       {
         id: 'experienceCenter',
         name: '消息推送',
-        path: '../experienceCenter/messageSend/home/home',
+        path: '../../packageA/pages/experienceCenter/messageSend/home/home',
         icon: './images/home_icon_xiaoxi.png',
       },
+      {
+        id: 'xp2p',
+        name: 'P2Pdemo',
+        path: '../xp2p/index/index',
+        icon: './images/home_icon_try.png',
+      },
+      {
+        id: 'worklist',
+        name: '工单',
+        path: '',
+        icon: './images/home_icon_worklist.png',
+        openType: 'redirect'
+      }
+      ,
       {
         id: 'comingSoon',
         name: '敬请期待',
@@ -56,13 +70,38 @@ Page({
         disabled: true
       },
     ],
+    url: '',
   },
-  onLoad: function () {
+  onLoad: function (options) {
    
-
+    console.log("options======>",options);
+   
     var launchOptions = wx.getLaunchOptionsSync();
     // const { accessToken, deviceSerial,channelNo,scene } = query;
     // console.log("scene",scene)
+    const that = this;
+    // 工单登录
+    wx.getStorage({
+      key: 'accesstoken',
+      success(res) {
+        console.log('缓存accesstoken',res.data);
+        if (res.data) {
+          that.setData({
+            url: '/packageC/pages/worklist/worklist'
+          })
+        } else {
+          that.setData({
+            url: '/pages/workListLogin/workListLogin?url=/packageC/pages/worklist/worklist'
+          })
+        }
+      },
+      fail(){
+        that.setData({
+          url: '/pages/workListLogin/workListLogin?url=/packageC/pages/worklist/worklist'
+        })
+      }
+    });
+
   },
 
   onShow: function() {
@@ -75,4 +114,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () { },
+
+  gotoWorkList(){
+    const {url} = this.data;
+    wx.navigateTo({
+      url: url,
+    })
+  },
 });

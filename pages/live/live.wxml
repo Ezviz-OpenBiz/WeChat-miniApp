@@ -6,7 +6,10 @@
 				<cover-image class="video-loading-bg" src="./images/live/live_loading_bg.png"></cover-image>
 				<!-- 停止状态 -->
 				<cover-view class="video-loaing video-ready" hidden="{{videoLoadingStatus !== 0}}">
-					<cover-image class="loading-gif" src="./images/live/landscape_play.png" catchtap="handlePlay"></cover-image>
+					<cover-image class="loading-gif" src="./images/live/landscape_play.png" 
+					ontap="handlePlay"
+					>
+					</cover-image>
 				</cover-view>
 				<!-- 加载资源中状态 -->
 				<cover-view class="video-loaing" hidden="{{videoLoadingStatus === 0 || videoNetWorkError}}">
@@ -40,6 +43,8 @@
 					<cover-view class="video-loading-text">离线时间：{{deviceOfflineTime}}</cover-view>
 				</cover-view>
 			</cover-view>
+
+
 			<!-- 清晰度 -->
 			<cover-view class="{{showHDSelect ? 'hd-select' : 'hd-select hide'}}">
 				<cover-view class="{{isHD ? 'hd-option active': 'hd-option'}}" catchtap="changeVideoHD">高清</cover-view>
@@ -65,37 +70,115 @@
 				<cover-image class="controls-img" src='{{!openSound ? "./images/live_icon_unsound_full.png":"./images/live_icon_sound_full.png"}}' catchtap="handleSound"></cover-image>
 				<cover-image class="controls-img" catchtap="ToggleObjectFit" src="./images/live_icon_adapt_full.png"></cover-image>
 			</cover-view>
-		<!-- 云台超限 -->
-			<!-- <cover-image class="ptz-limit right" src="./images/yuntai/ptz_limit_right.jpg">
-			</cover-image> -->
+
+			
+			<!-- 竖屏模式 -->
+
+			<!-- <cover-view class="{{(fullScreen || !showVideoControls)  ? 'hidden' : ''}} video-controls-container">
+				
+				<cover-view class="left-menu">
+					<cover-image class="controls-img" src='{{playVideo ? "./image/pause.svg":"./image/play.svg"}}' 
+						catchtap="{{playVideo ? 'handleStop': 'handlePlay'}}">
+					</cover-image>
+					<cover-image class="controls-img" src='{{!openSound ? "./image/sound-off.svg":"./image/sound-On.svg"}}' 			 	 catchtap="handleSound">
+					</cover-image>
+
+					<cover-image class="controls-img hd" src="{{isHD ? './image/高清.png' : './image/标清.png' }}" 	  	    	catchtap="handleHD">	
+					</cover-image>
+					<cover-view class="controls-img-hd">
+						<cover-view class="{{showHDSelect ? 'hd-select' : 'hd-select hide'}}">
+							<cover-view class="{{isHD ? 'hd-option active': 'hd-option'}}" catchtap="changeVideoHD">高清</cover-view>
+							<cover-view class="{{!isHD ? 'hd-option active': 'hd-option'}}" catchtap="changeVideoNormal">标清</cover-view>
+						</cover-view> 
+					</cover-view>
+					<cover-image class="controls-img"  catchtap="{{(playVideo && videoLoadingStatus == 100) ? screenShoot : ''}}"
+						src="{{(playVideo && videoLoadingStatus == 100) ? './image/pictureshhot-icon.svg' : './image/pictureshoot-disabled.svg'}}">
+					</cover-image>
+					<cover-image class="controls-img"  data-value="ptz" catchtap="tapPanel"
+						src="{{list[1].status === 1 ? './image/yuntai.svg' : './image/yuntai-disabled.svg'}}">
+					</cover-image>
+
+					<cover-image class="controls-img"  data-value="talk" catchtap="tapPanel"
+						src="{{list[0].status === 1 ? './image/talk-active.svg' : (list[0].status === 0 ? './image/talk.svg' : './image/talk-disabled.svg')}}">
+					</cover-image>
+				</cover-view>
+				
+				<cover-view class="right-menu">
+					<cover-image class="controls-img" catchtap="fullScreen" src="./image/fullscreen.svg"></cover-image>
+				</cover-view>
+			</cover-view> -->
+
+			<!-- 横屏模式 -->
+
+			<!-- <cover-view class="{{!fullScreen ? 'hidden' : '' }}' video-back-container">
+				<cover-image class="back-img" src="./image/back.svg" catchtap="unfullScreen"></cover-image>
+				<cover-view class="back-device">{{deviceName}}</cover-view>
+			</cover-view>
+		
+			<cover-view class="{{(!fullScreen || !showVideoControls) ? 'hidden' : '' }}' video-controls-container full-screen-controls">
+				<cover-view class="left-menu">
+					<cover-image class="controls-img" src='{{playVideo ? "./image/pause.svg":"./image/play.svg"}}' 
+						catchtap="{{playVideo ? 'handleStop': 'handlePlay'}}">
+					</cover-image>
+					<cover-image class="controls-img" src='{{!openSound ? "./image/sound-off.svg":"./image/sound-On.svg"}}' 			 	 catchtap="handleSound">
+					</cover-image>
+					<cover-image class="controls-img"  catchtap="{{(playVideo && videoLoadingStatus == 100) ? screenShoot : ''}}"
+						src="{{(playVideo && videoLoadingStatus == 100) ? './image/pictureshhot-icon.svg' : './image/pictureshoot-disabled.svg'}}">
+					</cover-image>
+					<cover-image class="controls-img"  data-value="ptz" catchtap="tapPanel"
+						src="{{list[1].status === 1 ? './image/云台.svg' : './image/云台disabled.svg'}}">
+					</cover-image>
+					<cover-image class="controls-img"  data-value="talk" catchtap="tapPanel"
+						src="{{list[0].status === 1 ? './image/yinsi-active.svg' : (list[0].status === 0 ? './image/talk.svg' : './image/talk-disabled.svg')}}">
+					</cover-image>
+					<cover-view class="controls-img-hd">
+						<cover-image class="controls-img hd" src="{{isHD ? './image/高清.png' : './image/标清.png' }}" 	  	       catchtap="handleHD">
+						</cover-image>
+						<cover-view class="{{showHDSelect ? 'hd-select' : 'hd-select hide'}}">
+								<cover-view class="{{isHD ? 'hd-option active': 'hd-option'}}" catchtap="changeVideoHD">高清</cover-view>
+								<cover-view class="{{!isHD ? 'hd-option active': 'hd-option'}}" catchtap="changeVideoNormal">标清</cover-view>
+							</cover-view> 
+					</cover-view>   
+					<cover-image class="controls-img"  data-value="mirror" catchtap="tapPanel"
+						src="{{list[5].status === 1 ? './image/jingxiang-active.svg' : (list[5].status === 0 ? './image/jingxiang-icon.svg' : './image/jingxiang-disabled.svg')}}">
+					</cover-image>
+					<cover-image class="controls-img"  data-value="cover" catchtap="tapPanel"
+						src="{{list[6].status === 1 ? './image/yinsi-active.svg' : (list[5].status === 0 ? './image/yinsi-icon.svg' : './image/yinsi-disabled.svg')}}">
+					</cover-image>
+					
+				</cover-view>
+			</cover-view> -->
+			<!--  -->
 			<cover-view class="ptz-limit {{ptzLimit ? ptzLimit : 'hidden'}}"></cover-view>
 		</live-player>
-
 	</view>
-	<view class="controls-container">
-		<view class="controls-item" catchtap="screenShoot">
-      <image class="item-img" src="{{(playVideo && videoLoadingStatus == 100) ? './images/preview_cut_normal.png' : './images/preview_cut_disable.png'}}"></image>
-      <text class="{{(playVideo && videoLoadingStatus == 100) ? 'item-text' : 'item-text disabled'}}" >截屏</text>
-    </view>
-    <button class="controls-item" open-type="share">
-      <image class="item-img" src="./images/preview_share_normal.png"></image>
-      <text class="item-text" >分享</text>
-    </button>
-	</view>
-	<!-- <view catchtap="startRecord">开始录音</view>
-  <view catchtap="stopRecord">结束录音</view> -->
-	<view hidden="{{panelStatus == 1 || panelStatus == 2}}">
+	
+	<!-- 控制面板 -->
+	<view hidden="{{panelStatus == 1 || panelStatus == 2 || panelStatus == 5}}">
 		<view class="panel-container">
-			<view wx:for="{{list}}" wx:key="id">
-				<view class="panel-item" data-value="{{item.id}}" catchtap="tapPanel">
-					<view class="panel-imgage-container">
-						<image class="panel-image" src="{{item.status === 0 ? item.normalPath: (item.status === 1 ? item.activePath : item.disablePath)}}"></image>
+			<view class="panel-item-container" wx:for="{{list}}" wx:key="id">
+				<view wx:if="{{item.id != 'capture'}}" class="{{item.status === 0 ? 'panel-item' : (item.status === 1 ? 'panel-item panel-item-active' : 'panel-item panel-item-disable')}}"  
+					data-value="{{item.id}}" catchtap="tapPanel">
+					<view class="panel-image-container">
+						<image class="panel-image" src="{{item.status === -1 ? item.abnormalImage : item.imageUrl}}">
+						</image>
+					</view>
+					<view class="panel-name">{{item.name}}</view>
+				</view>
+
+				<view wx:if="{{item.id == 'capture'}}" class="{{(playVideo && videoLoadingStatus == 100)  ? 'panel-item':'panel-item panel-item-disable'}}" 
+					data-value="{{item.id}}" catchtap="tapPanel">
+					<view class="panel-image-container">
+						<image class="panel-image" src="{{(playVideo && videoLoadingStatus == 100) ? item.imageUrl : item.abnormalImage}}">
+						</image>
 					</view>
 					<view class="panel-name">{{item.name}}</view>
 				</view>
 			</view>
+
 		</view>
 	</view>
+	<!-- 云台 -->
 	<view hidden="{{panelStatus !== 1}}" class="ptz-container">
 		<view class="close">
 			<image catchtap="handleBackPanel" class="close-img" src="./images/yuntai/close.png"></image>
@@ -104,6 +187,7 @@
 			<image class="ptz-img" src="{{currentPtzImg}}"></image>
 		</view>
 	</view>
+	<!-- 语音播报 -->
 	<view class="voice-container" hidden="{{panelStatus !==2}}">
 		<view class="close">
 			<image catchtap="handleBackPanel" class="close-img" src="./images/yuntai/close.png"></image>
@@ -133,12 +217,48 @@
 		<button class="btn primary" disabled="{{sendingOnceVoice}}" catchtouchstart="speakStart" catchtouchend="speakEnd">{{ sendingOnceVoice ? '请稍后...' : (recoderTime === 60 ? '按住说话': '松开结束')}}</button>
 	</view>
 
-	<!-- 返回直播 -->
-	<view class="backToLiveIcon" style="position: fixed; bottom: 20rpx; right: 20rpx">
-		<button catchtap="goToLive" style="text-align: center; font-size: 14px; background: #FF8F42;padding: 8">
-			<view><cover-image class="back-img" src="./images/nav_icon_back_full.png"></cover-image>进入回放</view>
-		</button>
+	<!-- 对讲 -->
+	<view hidden="{{panelStatus !== 5}}" class="talk-container">
+		<view class="talk-container-title">
+			<image class="closed-icon" src="./image/exit.svg"  catchtap="exitTalk" />
+			<view class="status-contant">
+				<view class="loading" wx:if="{{talkStatus == 1}}"></view>
+				<view class="title" wx:if="{{talkStatus == 2}}">对讲中</view>
+			</view>
+		</view>
+
+		<view class="talk-container-contant">
+			<view wx:if="{{talkStatus == 1}}" class="talk-container-loading"></view>
+			<image wx:if="{{talkStatus == 2}}" class="talk-container-talking" src="./image/quanshuanggong.png" />
+			<view wx:if="{{talkStatus == 3}}" class="talk-container-fail">
+				<image class="status-image" src="./image/quanshuanggong-fail.png" />
+				<view class="status-title">启动失败</view>
+				<text class="status-subtitle">请检查你的网络并点击重试</text>
+				<text class="status-subtitle">再启动对讲</text>
+				<button class="btn" catchtap="tryTalkAgain">重试</button>
+			</view>
+			<view wx:if="{{talkStatus == 4}}" class="talk-container-fail">
+				<image class="status-image" src="./image/quanshuanggong-fail2.png" />
+				<view class="status-title">启动失败</view>
+				<text class="status-subtitle">设备对讲中，请稍后重试</text>
+				<button class="btn" catchtap="tryTalkAgain">重试</button>
+			</view>
+		</view>
+		<!-- 推流 -->
+		<view class="push-container" wx:if="{{talkStatus == 2}}">
+			<live-pusher id="livePusher" class="live-pusher-container" binderror="error" url="{{pushUrl}}" mode="RTC" audio-quality="low" bindstatechange="pusherStateChange" enable-camera="{{true}}" enable-mic='{{openSound}}' catchtap="{{pushVideo ? 'stopPush': 'startPush'}}">
+			</live-pusher>
+		</view>
+		<!-- 拉流 -->
+		<view class="video-container" data-playId="{{item.id}}" bindtap="_currentPlayContainer">
+      <live-player id="talk-liveplayer"  binderror="error" bindstatechange="statechange" mode="RTC" src="{{item.playSrc}}" class="video-item" autoplay >
+      </live-player>
+    </view>
+
+
 	</view>
+
+	
   <!-- 模态框 -->
   <mp-dialog title="{{dialogTitle}}" show="{{dialogShow}}" bindbuttontap="tapDialogButton" buttons="{{buttons}}">
     <view>{{dialogContent}}</view>

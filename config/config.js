@@ -4,11 +4,11 @@ import serverStreams from './streams';
 // 这些是和设备无关的配置
 const config = {
   appParams: {
-    appid: 1300837838,
-    appOauthId: '60f646ba062556e21befdcb6', // 600a4206062556e21befdc98, 60f646ba062556e21befdcb6
-    appKey: 'LBfgxw6aDYWzthE3', // pMqRNpU3M4wOA2BY, LBfgxw6aDYWzthE3
-    appSecretKey: '2qetkhKyeJPqZKv8axMYrr3jfHUUaMT2', // b62XcOoDcvJOgnibM8iKFVgVsXcdxNda,2qetkhKyeJPqZKv8axMYrr3jfHUUaMT2
-    appPackage: 'miniprogram', // 
+    appid: 1253131157,
+    appOauthId: '600a4206062556e21befdc98',
+    appKey: 'pMqRNpU3M4wOA2BY',
+    appSecretKey: 'b62XcOoDcvJOgnibM8iKFVgVsXcdxNda',
+    appPackage: 'ios.test.com',
   },
   commandMap: {
     getLiveStatus: {
@@ -62,6 +62,9 @@ const config = {
         type: 'playback',
       },
     },
+    getPlaybackProgress: {
+      cmd: 'playback_progress',
+    },
     pausePlayback: {
       cmd: 'playback_pause',
     },
@@ -81,6 +84,11 @@ for (const key in devices) {
     targetId: key,
     ...devices[key],
   };
+}
+// 最近查看的ipc设备
+const recentIPC = wx.getStorageSync('recentIPC');
+if (recentIPC) {
+  totalData.recentIPC = recentIPC;
 }
 
 // server流都加进去

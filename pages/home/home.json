@@ -1,3 +1,5 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "footer-menue": "../component/footerMenue/footerMenue"
+  }
 }
