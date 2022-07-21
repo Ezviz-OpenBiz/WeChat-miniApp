@@ -186,7 +186,7 @@ Page({
     } 
   
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/video/by/time`, 
+      url: `${OPEN_DOMAIN}/api/lapp/video/by/time`, 
       method: 'POST',
       data: {
         accessToken: accessToken,
@@ -309,7 +309,7 @@ Page({
   getPlayUrl(param){
     var _this = this;
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/v2/live/address/get`, 
+      url: `${OPEN_DOMAIN}/api/lapp/v2/live/address/get`, 
       method: 'POST',
       data: param,
       header: {

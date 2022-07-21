@@ -1,8 +1,0 @@
-{
-  "usingComponents": {
-    "serverAdvantage": "../../../component/serverAdvantage/index",
-    "serverInstruction": "../../../component/serverInstruction/index"
-  },
-
-  "navigationBarTitleText": "云录制"
-}

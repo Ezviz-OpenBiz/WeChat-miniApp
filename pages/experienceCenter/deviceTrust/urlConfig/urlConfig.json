@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    
-    "Modal": "../../../component/modal/modal"
-  },
-  "navigationBarTitleText": "配置授权页"
-}

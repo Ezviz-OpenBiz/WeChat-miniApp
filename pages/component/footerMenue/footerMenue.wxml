@@ -1,0 +1,16 @@
+<view class="footer-menue-wrap">
+<view class="footer-menue-container">
+  <view class="footer-menue">
+    <view class="menue-item" wx:for="{{menue}}" wx:key="key" data-key="{{item.key}}" bindtap="gotoLink">
+      <navigator url="{{item.linkto}}" class="link" wx:if="{{activeItem != item.key}}" open-type="redirect"> 
+        <image class="menue-item-icon" src="{{activeItem == item.key ? item.activeIcon : item.icon}}"></image>
+        <view class="{{activeItem == item.key ? 'menue-item-text-active' : 'menue-item-text'}}">{{item.text}}</view>
+      </navigator>
+      <view wx:if="{{activeItem == item.key}}">
+        <image class="menue-item-icon" src="{{activeItem == item.key ? item.activeIcon : item.icon}}"></image>
+        <view class="{{activeItem == item.key ? 'menue-item-text-active' : 'menue-item-text'}}">{{item.text}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+</view>

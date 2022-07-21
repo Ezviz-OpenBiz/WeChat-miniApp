@@ -1,0 +1,36 @@
+.footer-menue-wrap {
+  padding-top: 20px;
+}
+.footer-menue-container {
+  box-shadow: 0px -1px 21px 0 rgba(0, 0, 0, 0.06);
+  text-align: center;
+  padding: 0 40px;
+}
+.footer-menue {
+  margin: 0 auto;
+  height: 84px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+}
+
+.footer-menue .menue-item {
+  width: 140px;
+  padding-top: 10px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.footer-menue .menue-item .menue-item-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.footer-menue .menue-item .menue-item-text {
+  color: #CCCCCC;
+}
+
+.footer-menue .menue-item .menue-item-text-active {
+  color: #648FFC;
+}

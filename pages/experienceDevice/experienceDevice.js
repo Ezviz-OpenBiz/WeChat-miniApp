@@ -112,7 +112,7 @@ Page({
       return value.deviceSerial === deviceSerial ;
     })
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/info`,
+      url: `${OPEN_DOMAIN}/api/lapp/device/info`,
       method: 'POST',
       data: {
         accessToken,
@@ -151,7 +151,7 @@ Page({
       return value.deviceSerial === device;
     })
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/capture`, //仅为示例，并非真实的接口地址
+      url: `${OPEN_DOMAIN}/api/lapp/device/capture`, //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {
         accessToken: accessToken,

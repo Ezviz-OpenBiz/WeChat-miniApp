@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    "Modal": "../../../component/modal/modal"
-  },
-  "navigationBarTitleText": "设备托管"
-
-}

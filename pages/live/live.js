@@ -235,7 +235,7 @@ Page({
         sendingOnceVoice: true,
       })
       wx.uploadFile({
-        url: `${OPEN_DOMAIN}/api/v3/console/weChatFile/voice/sendonce`, //仅为示例，非真实的接口地址
+        url: `${OPEN_DOMAIN}/api/lapp/voice/sendonce`, //仅为示例，非真实的接口地址
         filePath: tempFilePath, //tempFilePaths[0],
         name: 'voiceFile',
         formData: {
@@ -325,7 +325,7 @@ Page({
     const { accessToken, deviceSerial, channelNo } = this.data;
     var _this = this;
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/v2/live/address/get`, //仅为示例，并非真实的接口地址
+      url: `${OPEN_DOMAIN}/api/lapp/v2/live/address/get`, //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {
         accessToken: accessToken,
@@ -375,7 +375,7 @@ Page({
       }
     });
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/v2/live/address/get`, //仅为示例，并非真实的接口地址
+      url: `${OPEN_DOMAIN}/api/lapp/v2/live/address/get`, //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {
         accessToken: accessToken,
@@ -426,7 +426,7 @@ Page({
   console.log(accessToken,deviceSerial,channelNo);
   var _this = this;
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/scene/switch/status`,
+      url: `${OPEN_DOMAIN}/api/lapp/device/scene/switch/status`,
       method: 'POST',
       data: {
         accessToken,
@@ -473,7 +473,7 @@ Page({
     const { accessToken, deviceSerial, channelNo ,showVideoControls, videoNetWorkError,videoLoadingStatus } = this.data;
     var _this = this;
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/info`, //仅为示例，并非真实的接口地址
+      url: `${OPEN_DOMAIN}/api/lapp/device/info`, //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {
         accessToken,
@@ -568,7 +568,7 @@ Page({
   const { accessToken,deviceSerial,channelNo,playVideo} = this.data;
   var _this = this;
   wx.request({
-    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/capacity`,
+    url: `${OPEN_DOMAIN}/api/lapp/device/capacity`,
     method: 'POST',
     data: {
       accessToken,
@@ -647,7 +647,7 @@ Page({
       defaultVoiceListLoading: true,
     })
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/voice/query`, //仅为示例，并非真实的接口地址
+      url: `${OPEN_DOMAIN}/api/lapp/voice/query`, //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {
         "accessToken": accessToken,
@@ -1318,7 +1318,7 @@ authConfirm(){
       coverInterval: true,
     })
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/scene/switch/set`,
+      url: `${OPEN_DOMAIN}/api/lapp/device/scene/switch/set`,
       method: 'POST',
       data: {
         accessToken: accessToken,
@@ -1398,7 +1398,7 @@ authConfirm(){
       mirrorInterval: true,
     });
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/ptz/mirror`, //仅为示例，并非真实的接口地址
+      url: `${OPEN_DOMAIN}/api/lapp/device/ptz/mirror`, //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {
         accessToken: accessToken,
@@ -1444,7 +1444,7 @@ authConfirm(){
     var type = event.currentTarget.dataset.type;
     console.log("type",type)
     wx.request({
-      url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/voice/send`, //仅为示例，并非真实的接口地址
+      url: `${OPEN_DOMAIN}/api/lapp/voice/send`, //仅为示例，并非真实的接口地址
       method: 'POST',
       data: {
         accessToken: accessToken,
@@ -1678,7 +1678,7 @@ authConfirm(){
 startTalk(){
   const {accessToken, deviceSerial} = this.data;
   wx.request({
-    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/lapp/device/capacity`,
+    url: `${OPEN_DOMAIN}/api/lapp/device/capacity`,
     method: 'POST',
     data: {
       accessToken: accessToken,
@@ -1708,7 +1708,7 @@ startTalk(){
 getToken(){
   const {accessToken} = this.data;
   wx.request({
-    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/user/token`,
+    url: `${OPEN_DOMAIN}/api/user/token`,
     method: 'POST',
     data: {
       accessToken: accessToken,
@@ -1749,7 +1749,7 @@ orderRoom(){
 
   const { customId, accessToken } = this.data;
   wx.request({
-    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/v3/conference/gen`,
+    url: `${OPEN_DOMAIN}/api/v3/conference/gen`,
     method: 'POST',
     data: {
       accessToken: accessToken,
@@ -1813,7 +1813,7 @@ orderRoom(){
 advanceDevice() {
   const {accessToken, roomId, deviceSerial, channelNo, token1} = this.data;
   wx.request({
-    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/v3/conference/device/invite`,
+    url: `${OPEN_DOMAIN}/api/v3/conference/device/invite`,
     method: 'POST',
     data: {
       accessToken: accessToken,
@@ -1863,7 +1863,7 @@ advanceDevice() {
 exitDevice() {
   const {accessToken, roomId, deviceSerial, channelNo, token2} = this.data;
   wx.request({
-    url: `${OPEN_DOMAIN}/api/v3/console/weChat/api/v3/conference/device/kickout`,
+    url: `${OPEN_DOMAIN}/api/v3/conference/device/kickout`,
     method: 'POST',
     data: {
       accessToken: accessToken,
